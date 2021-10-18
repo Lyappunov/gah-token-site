@@ -49,6 +49,9 @@ class MenuBar extends Component {
                             <li className="nav-item ">
                                 <NavLink className="nav-link" to="/tokensell">Token Sale</NavLink>
                             </li>
+                            <li className="nav-item ">
+                                <NavLink className="nav-link" to="/tokensell">Token Swap</NavLink>
+                            </li>
                             <li className="nav-item dropdown">
                                 <a className="nav-link py-0 d-flex align-items-center" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                     <img src={avatar} alt="User-Profile" className="img-fluid avatar avatar-50 avatar-rounded"/>
