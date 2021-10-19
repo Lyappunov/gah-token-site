@@ -5,7 +5,7 @@ import { connect } from "react-redux";
 import "bootstrap/dist/css/bootstrap.css";
 import "../../assets/css/common.css";
 import './index.scss'
-import headerLogo from "../../assets/images/photo_ega_coin.png"
+import headerLogo from "../../assets/images/gahCion.png"
 
 import MenuBar from "./menubar"
 
@@ -20,7 +20,7 @@ class Header extends Component {
         <header style={{ minWidth:'100%', minHeight:120, position:'relative'}}>
           
           <a target="_blank" rel="noopener noreferrer" href="#">
-            <img alt='Coin Panel Logo' lazy="true" src={headerLogo} style={{width:100}}/>
+            <img alt='Coin Panel Logo' lazy="true" src={headerLogo} style={{width:'18%'}}/>
             GAH-TOKEN Current Price
           </a>
         </header>
