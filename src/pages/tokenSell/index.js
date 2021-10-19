@@ -93,7 +93,7 @@ class TokenSell extends Component {
       <div>
         <Header />
         <SideBar />
-          <div className="container-fluid content-inner pb-0" style={{minHeight:680, minWidth:'100%', paddingLeft:'17%', paddingTop:245}}>
+          <div className="container-fluid content-inner pb-0" style={{minHeight:680, minWidth:'100%',margin:'auto', paddingLeft:'17%', paddingTop:245}}>
                 <div className="row">
                     <div className="col-sm-10">
                         <div className="card">
@@ -106,7 +106,7 @@ class TokenSell extends Component {
                             </div>
                             <div className="d-flex mt-4 ms-4 me-4 justify-content-between" style={{paddingBottom : 20}}>
                             
-                              <form onSubmit={this.handleSubmit} style={{width:'100%'}}>
+                              <form onSubmit={this.handleSubmit} style={{width:'100%',margin:'auto'}}>
                                 <div className="modal-content">
                                       
                                       <div className="modal-body">

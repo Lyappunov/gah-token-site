@@ -52,7 +52,7 @@ const useStyles = makeStyles((theme) => ({
 // const stripePromise = loadStripe("pk_test_51IzTMJF1cOJreNKh78LrrhTY7mYt7NpOnSSKfYjoJtttFvAchGI4IuYGJDbQU3E5PwToWFbSV6g4iZE2JQhkKMDn00VDqjegXn");
 
 
-export default function TokenBuy() {
+export default function TokenSwap() {
   const { user } = useSelector(state => state.auth);
   console.log('current users info is ', user)
   const classes = useStyles();
@@ -61,17 +61,16 @@ export default function TokenBuy() {
   const [price, setPrice] = useState(0);
 
   const [open, setOpen] = React.useState(false);
-  const [showPaypal, setShowPaypal] = useState(false);
   const [sendingComplete, setSendingComplete] = useState(false);
-
-  const [token, setToken] = useState('');
 
   const [ega_usd, setEgaUsd] = useState();
   const [ega_mos, setEgaMos] = useState();
   const [buyLimit, setBuyLimit] = useState();
   const [limitUSD, setLimitUSD] = useState();
-  const [selectedCrypto, setSelectedCrypto] = useState();
-  const [cryptoAmount, setCryptoAmount] = useState('');
+  const [selectedFrom, setSelectedFrom] = useState('');
+  const [selectedTo, setSelectedTo] = useState('');
+  const [fromAmount, setFromAmount] = useState('');
+  const [toAmount, setToAmount] = useState('');
   const [usdtAmount, setUsdtAmount] = useState('');
 
 
@@ -117,7 +116,7 @@ export default function TokenBuy() {
         phoneNumber:'',
         walletAddress: '',
         tranDate:datetime,
-        tokenName:token,
+        tokenName:selectedFrom,
         tranType:'BUY',
         amount : amount
     }
@@ -135,50 +134,24 @@ export default function TokenBuy() {
         
     );
   }
-  
-  const handleOpen = () => {
-    setOpen(true);
+
+  const handleChangeSelectFrom = (event) => {
+    setSelectedFrom(event.target.value);
   };
 
-  const handleClose = () => {
-    setOpen(false);
+  const handleChangeSelectTo = (event) => {
+    setSelectedTo(event.target.value);
   };
 
-  const handleChange = (event) => {
-    setValue(event.target.value);
-  };
-
-  const handleChangeSelect = (event) => {
-    setToken(event.target.value);
-  };
-
-  const onChangeCryptoAmount = e => {
-      console.log('here is okay', e.target.value)
-    setCryptoAmount(e.target.value);
-    // if(token == 'gah'){
-    //     var usd_amount = Number(e.target.value) * ega_usd;
-    //     setUsdtAmount(usd_amount.toFixed(5))
-    //     setPrice(usd_amount.toFixed(5));
-    // }
-    // if (token == 'mos'){
-    //     var usd_amount = Number(e.target.value) * (ega_usd/ega_mos);
-    //     setUsdtAmount(usd_amount.toFixed(5))
-    //     setPrice(usd_amount.toFixed(5));
-    // }
+  const onChangeFromAmount = e => {
+    setFromAmount(e.target.value);
+    
   }
 
-  const onChangeUSDAmount = e => {
-    setUsdtAmount(e.target.value);
-    setPrice(e.target.value);
-    if(token == 'gah'){
-        var crypto_amount = Number(e.target.value) / ega_usd;
-        setCryptoAmount(crypto_amount);
+  const onChangeToAmount = e => {
+        setFromAmount(e.target.value);
+        
     }
-    if(token == 'mos'){
-        var crypto_amount = Number(e.target.value) / (ega_usd/ega_mos);
-        setCryptoAmount(crypto_amount);
-    }
-  }
 
 const sendToken = async (tokenAmount) => {
     savingToDatabase(tokenAmount);    
@@ -186,10 +159,6 @@ const sendToken = async (tokenAmount) => {
 
 const handleSubmit =(e) =>{
     e.preventDefault();
-    if (cryptoAmount<buyLimit){
-        alert("Sorry but, you need to purchase the tokens of minimum " + buyLimit + ' ' + token.toUpperCase());
-    }
-    else handleOpen();
 }
 
 useEffect(()=>{
@@ -205,15 +174,15 @@ useEffect(()=>{
             <form style={{width:'60%', margin:'auto', marginTop:15}} onSubmit={handleSubmit}>
                 <div className='card'>
                     <div className='card-header-tb'>
-                        Token Buying 
+                        Token Swaping 
                     </div>
                     <div className='card-body'>
                         <div className='textfield'>
-                            <p>Token Amount : </p>
+                            <p>From Token : </p>
                             <FormControl sx={{ m: 1, minWidth: 250 }}>
                                 <Select
-                                    value={token}
-                                    onChange={handleChangeSelect}
+                                    value={selectedFrom}
+                                    onChange={handleChangeSelectFrom}
                                     displayEmpty
                                     inputProps={{ 'aria-label': 'Without label' }}
                                 >
@@ -224,75 +193,37 @@ useEffect(()=>{
                                 <MenuItem value={'mos'}>MOS TOKEN</MenuItem>
                                 </Select>
                             </FormControl>
-                            <TextField id="standard-basic" type="number" variant="outlined" value={cryptoAmount} onChange={onChangeCryptoAmount} min={50}/>
-                            <p> {token.toUpperCase()}</p>
+                            <TextField id="standard-basic" type="number" variant="outlined" value={fromAmount} onChange={onChangeFromAmount} min={50}/>
+                            <p> {selectedFrom.toUpperCase()}</p>
                             
                         </div>
-                        <p style={{color:'grey'}}>* You need to purchase the tokens of minimum {buyLimit} cryto ({limitUSD} USD)</p>
                         <br/>
                         <div className='textfield'>
-                            <p>Price : </p>
-                                <TextField id="filled-basic" type="number" variant="outlined" value={price} onChange={onChangeUSDAmount}/>
-                            <p> USD</p>
+                            <p>To token : </p>
+                            <FormControl sx={{ m: 1, minWidth: 250 }}>
+                                <Select
+                                    value={selectedTo}
+                                    onChange={handleChangeSelectTo}
+                                    displayEmpty
+                                    inputProps={{ 'aria-label': 'Without label' }}
+                                >
+                                <MenuItem value=''>
+                                    <em>None</em>
+                                </MenuItem>
+                                <MenuItem value={'gah'}>GAH TOKEN</MenuItem>
+                                <MenuItem value={'mos'}>MOS TOKEN</MenuItem>
+                                </Select>
+                            </FormControl>
+                            <TextField id="standard-basic" type="number" variant="outlined" value={toAmount} onChange={onChangeToAmount} min={50}/>
+                            <p> {selectedTo.toUpperCase()}</p>
                         </div>
-                    
-                        <FormControl component="fieldset">
-                            <FormLabel component="legend">Select Payment!</FormLabel>
-                            <RadioGroup aria-label="gender" name="gender1" value={value} onChange={handleChange}>
-                                {/* <FormControlLabel value="stripe" control={<Radio />} label="Credit Cart" /> */}
-                                <FormControlLabel value="paypal" control={<Radio />} label="Paypal" />
-                                <FormControlLabel value="btc" control={<Radio />} label="BitCoin" />
-                            </RadioGroup>
-                        </FormControl>
+
                     </div>
                     <div className='card-footer'>
-                                                
-                        {/* <Button
-                            variant="contained"
-                            color="primary"
-                            className={classes.button}
-                            type='submit'
-                        >
-                            Buy Now
-                        </Button> */}
-                        <button type="submit" className="btn btn-primary">Buy Now</button>
+                        <button type="submit" className="btn btn-primary">Swap</button>
                     </div>
                 </div>
             </form>
-    
-            <Modal
-                aria-labelledby="transition-modal-title"
-                aria-describedby="transition-modal-description"
-                className={classes.modal}
-                open={open}
-                onClose={handleClose}
-                closeAfterTransition
-                BackdropComponent={Backdrop}
-                BackdropProps={{
-                timeout: 500,
-                }}
-            >
-                <Fade in={open}>
-                    
-                    {value === 'paypal' ? 
-                        <PaypalButton 
-                            sendToken={sendToken}
-                            amount={cryptoAmount} 
-                            price={price}
-                            sendingComplete = {sendingComplete}
-                            setSendingComplete = {setSendingComplete}
-                        />: 
-                        <PaymentBox
-                            sendToken={sendToken}
-                            amount={cryptoAmount} 
-                            price={price}
-                            sendingComplete = {sendingComplete}
-                            setSendingComplete = {setSendingComplete}
-                        /> 
-                    }
-                    
-                </Fade>
-            </Modal>
         </div>
     </div>
   );

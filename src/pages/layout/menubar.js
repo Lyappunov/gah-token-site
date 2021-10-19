@@ -41,7 +41,7 @@ class MenuBar extends Component {
                     <div className="collapse navbar-collapse" id="navbarSupportedContent" style={{background:'#303032'}}>
                         <ul className="navbar-nav ms-auto navbar-list mb-2 mb-lg-0 align-items-center">
                             <li className="nav-item ">
-                                <NavLink to="/home">Home</NavLink>
+                                <NavLink className="nav-link" to="/home">Home</NavLink>
                             </li>
                             <li className="nav-item ">
                                 <NavLink className="nav-link" to="/tokenbuy">Token Buying</NavLink>
@@ -50,7 +50,7 @@ class MenuBar extends Component {
                                 <NavLink className="nav-link" to="/tokensell">Token Sale</NavLink>
                             </li>
                             <li className="nav-item ">
-                                <NavLink className="nav-link" to="/tokensell">Token Swap</NavLink>
+                                <NavLink className="nav-link" to="/tokenswap">Token Swap</NavLink>
                             </li>
                             <li className="nav-item dropdown">
                                 <a className="nav-link py-0 d-flex align-items-center" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">

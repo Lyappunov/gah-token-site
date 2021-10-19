@@ -16,6 +16,7 @@ import Signin from "./components/auth/signin";
 import Signup from "./components/auth/signup";
 import TokenBuy from "./pages/tokenBuy";
 import TokenSell from "./pages/tokenSell";
+import TokenSwap from "./pages/tokenSwap";
 import setAuthToken from "./utils/setAuthToken";
 
 import Home from "./pages/home";
@@ -59,6 +60,9 @@ function App  ()  {
                 </PrivateRoute>
                 <PrivateRoute exact path="/tokensell">
                   <TokenSell />
+                </PrivateRoute>
+                <PrivateRoute exact path="/tokenswap">
+                  <TokenSwap />
                 </PrivateRoute>
             </Switch>
             

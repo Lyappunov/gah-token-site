@@ -6,9 +6,39 @@ import "bootstrap/dist/css/bootstrap.css";
 import "../../assets/css/common.css";
 import './index.scss'
 
+import axios from 'axios';
+import {SERVER_MAIN_URL} from '../../config'
+
  
 // Here, we display our Navbar
 class SideBar extends Component {
+    constructor(props) {
+        super(props);
+        this.state = { 
+          totalSupply:1000000000,
+          distributes:0,
+          totalBalance:0,
+          errors: {}
+        };
+        this.getDistributes = this.getDistributes.bind(this);
+       
+      }
+
+    getDistributes(){
+        axios
+        .get(`${SERVER_MAIN_URL}/distributes/`)
+        .then((response) => {
+            console.log('the result of getDistributes method is ', response.data)
+            this.setState({distributes: Number(response.data), totalBalance : this.state.totalSupply - Number(response.data)});
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+    }
+
+    componentDidMount() {
+        this.getDistributes();
+    }
   render() {
   return (
     <div className="row">
@@ -21,15 +51,15 @@ class SideBar extends Component {
                 </li>
                 <li className="nav-item " style={{textAlign:'center'}}>
                     <p>Total Supply:</p>
-                    <p style={{color:'#1eff12', fontSize:22}}>1000000000</p>
+                    <p style={{color:'#1eff12', fontSize:22}}>{this.state.totalSupply}</p>
                 </li>
                 <li className="nav-item " style={{textAlign:'center'}}>
                     <p>Distributed token:</p>
-                    <p  style={{color:'#1eff12', fontSize:22}}>0</p>
+                    <p  style={{color:'#1eff12', fontSize:22}}>{this.state.distributes}</p>
                 </li>
                 <li className="nav-item " style={{textAlign:'center'}}>
-                    <p>Token Balance:</p>
-                    <p style={{color:'#1eff12', fontSize:22}}>1000000000</p>
+                    <p>GAH Total Balance:</p>
+                    <p style={{color:'#1eff12', fontSize:22}}>{this.state.totalBalance}</p>
                 </li>
             
             </ul>
