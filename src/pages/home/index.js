@@ -88,6 +88,7 @@ function Home() {
           <Header />
           <SideBar />
           <div style={{paddingLeft:'17%', paddingTop:245}}>
+            <p style={{fontSize:28,fontWeight:700,color:'#1eff1e', paddingLeft:"35%"}}>{!fetchingUSDData?currentPrice + 'USD':''} </p>
             <div style={{maxWidth:'70%', margin:'auto'}}>
               <div className='row'>
                 <div className='popup'>

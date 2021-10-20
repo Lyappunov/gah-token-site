@@ -15,7 +15,7 @@ class SideBar extends Component {
     constructor(props) {
         super(props);
         this.state = { 
-          totalSupply:1000000000,
+          totalSupply:0,
           distributes:0,
           totalBalance:0,
           errors: {}
@@ -26,10 +26,9 @@ class SideBar extends Component {
 
     getDistributes(){
         axios
-        .get(`${SERVER_MAIN_URL}/distributes/`)
+        .get(`${SERVER_MAIN_URL}/getinfo/`)
         .then((response) => {
-            console.log('the result of getDistributes method is ', response.data)
-            this.setState({distributes: Number(response.data), totalBalance : this.state.totalSupply - Number(response.data)});
+            this.setState({totalSupply: Number(response.data.totalSupply), distributes: Number(response.data.distributes), totalBalance : Number(response.data.balance)});
         })
         .catch(function (error) {
             console.log(error);
