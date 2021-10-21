@@ -20160,3 +20160,9 @@ body.offcanvas-active {
   border-color: #FF971D !important;
   box-shadow: 0 0px 0px 0 rgba(0, 0, 0, 0);
 }
+
+.modal{
+  display: 'flex';
+  align-items: 'center';
+  justify-content: 'center';
+}

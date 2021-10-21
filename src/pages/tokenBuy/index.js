@@ -23,7 +23,6 @@ import PaypalButton from '../../components/paypal/paypalButton';
 import PaymentBox from '../../components/BTC/paymentBox';
 import './index.scss'
 
-import Web3 from "web3";
 import {BACKEND_URL} from '../../global/config'
 
 const useStyles = makeStyles((theme) => ({
@@ -221,7 +220,7 @@ useEffect(()=>{
                                     <em>None</em>
                                 </MenuItem>
                                 <MenuItem value={'gah'}>GAH TOKEN</MenuItem>
-                                <MenuItem value={'mos'}>MOS TOKEN</MenuItem>
+                                <MenuItem value={'mos'}>E-CFA</MenuItem>
                                 </Select>
                             </FormControl>
                             <TextField id="standard-basic" type="number" variant="outlined" value={cryptoAmount} onChange={onChangeCryptoAmount} min={50}/>
