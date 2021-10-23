@@ -53,25 +53,29 @@ const useStyles = makeStyles((theme) => ({
 
 export default function TokenBuy() {
   const { user } = useSelector(state => state.auth);
+  const { tokenprice } = useSelector(state=>state.tokenprice);
   console.log('current users info is ', user)
   const classes = useStyles();
 
-  const [value, setValue] = React.useState('btc');
+  const [value, setValue] = React.useState('paypal');
   const [price, setPrice] = useState(0);
 
   const [open, setOpen] = React.useState(false);
   const [showPaypal, setShowPaypal] = useState(false);
   const [sendingComplete, setSendingComplete] = useState(false);
 
-  const [token, setToken] = useState('');
+  const [token, setToken] = useState('mos');
 
-  const [ega_usd, setEgaUsd] = useState();
-  const [ega_mos, setEgaMos] = useState();
-  const [buyLimit, setBuyLimit] = useState();
-  const [limitUSD, setLimitUSD] = useState();
+  const [ega_usd, setEgaUsd] = useState(0);
+  const [ega_mos, setEgaMos] = useState(0);
+  const [buyLimit, setBuyLimit] = useState(0);
+  const [limitUSD, setLimitUSD] = useState(0);
   const [selectedCrypto, setSelectedCrypto] = useState();
-  const [cryptoAmount, setCryptoAmount] = useState('');
-  const [usdtAmount, setUsdtAmount] = useState('');
+  const [cryptoAmount, setCryptoAmount] = useState(0);
+  const [usdtAmount, setUsdtAmount] = useState(0);
+
+  const [disabledBTN, setDisabledBTN] = useState('');
+  const [displayerr, setDisplayerr] = useState('none');
 
 
   const getCurrentDate = () => {
@@ -152,18 +156,24 @@ export default function TokenBuy() {
   };
 
   const onChangeCryptoAmount = e => {
-      console.log('here is okay', e.target.value)
     setCryptoAmount(e.target.value);
-    // if(token == 'gah'){
-    //     var usd_amount = Number(e.target.value) * ega_usd;
-    //     setUsdtAmount(usd_amount.toFixed(5))
-    //     setPrice(usd_amount.toFixed(5));
-    // }
-    // if (token == 'mos'){
-    //     var usd_amount = Number(e.target.value) * (ega_usd/ega_mos);
-    //     setUsdtAmount(usd_amount.toFixed(5))
-    //     setPrice(usd_amount.toFixed(5));
-    // }
+    if(token == 'gah'){
+        var usd_amount = Number(e.target.value) * ega_usd;
+        setUsdtAmount(usd_amount.toFixed(5))
+        setPrice(usd_amount.toFixed(5));
+    }
+    if (token == 'mos'){
+        var usd_amount = Number(e.target.value) * (ega_usd/ega_mos);
+        setUsdtAmount(usd_amount.toFixed(5))
+        setPrice(usd_amount.toFixed(5));
+        if(e.target.value < buyLimit){
+            setDisplayerr('');
+            setDisabledBTN('disabled');
+        } else {
+            setDisplayerr('none');
+            setDisabledBTN('')
+        }
+    }
   }
 
   const onChangeUSDAmount = e => {
@@ -207,6 +217,17 @@ useEffect(()=>{
                         Token Buying 
                     </div>
                     <div className='card-body'>
+                        <div className="row">
+                            <div className='col-lg-5'>
+                                <p style={{color:'green'}}>* 1 GAH = {(ega_usd).toFixed(6)} USD </p>
+                                <p style={{color:'green'}}>* 1 ECFA = {(ega_usd/ega_mos).toFixed(6)} USD </p>
+                            </div>
+                        
+                            <div className='col-lg-7'>
+                                <p style={{color:'green'}}>* E-CFA minimum : {buyLimit} ECFA</p>
+                                <p style={{color:'green'}}>* USD minimum : {limitUSD} USD</p>
+                            </div>
+                        </div>
                         <div className='textfield'>
                             <p>Token Amount : </p>
                             <FormControl sx={{ m: 1, minWidth: 250 }}>
@@ -215,6 +236,7 @@ useEffect(()=>{
                                     onChange={handleChangeSelect}
                                     displayEmpty
                                     inputProps={{ 'aria-label': 'Without label' }}
+                                    disabled
                                 >
                                 <MenuItem value=''>
                                     <em>None</em>
@@ -224,10 +246,10 @@ useEffect(()=>{
                                 </Select>
                             </FormControl>
                             <TextField id="standard-basic" type="number" variant="outlined" value={cryptoAmount} onChange={onChangeCryptoAmount} min={50}/>
-                            <p> {token.toUpperCase()}</p>
+                            <p> ECFA</p>
                             
                         </div>
-                        <p style={{color:'grey'}}>* You need to purchase the tokens of minimum {buyLimit} cryto ({limitUSD} USD)</p>
+                        <p style={{color:'#ff0000', display:displayerr}} >* Invalid amount, because it's less than minimum amounts</p>
                         <br/>
                         <div className='textfield'>
                             <p>Price : </p>
@@ -254,7 +276,7 @@ useEffect(()=>{
                         >
                             Buy Now
                         </Button> */}
-                        <button type="submit" className="btn btn-primary">Buy Now</button>
+                        <button type="submit" className="btn btn-primary" disabled={disabledBTN}>Buy Now</button>
                     </div>
                 </div>
             </form>
