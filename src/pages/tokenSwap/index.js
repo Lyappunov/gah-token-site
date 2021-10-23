@@ -63,8 +63,9 @@ export default function TokenSwap() {
   const [open, setOpen] = React.useState(false);
   const [sendingComplete, setSendingComplete] = useState(false);
 
-  const [ega_usd, setEgaUsd] = useState();
-  const [ega_mos, setEgaMos] = useState();
+  const [ega_usd, setEgaUsd] = useState(0);
+  const [ega_eur, setEgaEur] = useState(0);
+  const [ega_mos, setEgaMos] = useState(0);
   const [buyLimit, setBuyLimit] = useState();
   const [limitUSD, setLimitUSD] = useState();
   const [selectedFrom, setSelectedFrom] = useState('');
@@ -94,37 +95,27 @@ export default function TokenSwap() {
         console.log('the result of getData method is ', response.data)
         setEgaUsd(Number(response.data[0].ega_usd));
         setEgaMos(Number(response.data[0].ega_mos));
-        axios
-          .get(`${BACKEND_URL}/limitamount`)
-          .then((reslim) => {
-            setBuyLimit(Number(reslim.data[0].buyMIN))
-            let limit_usd = (Number(reslim.data[0].buyMIN)*Number(response.data[0].ega_usd)).toFixed(6);
-            setLimitUSD(limit_usd);
-          })
-          .catch(function (err) {
-            console.log(err);
-          });
+        setEgaEur(Number(response.data[0].ega_eur));
       })
       .catch(function (error) {
         console.log(error);
       });
   }
-  const savingToDatabase = (amount) => {
+  const savingToDatabase = () => {
     var datetime =  getCurrentDate();
-    const transactionData = {
-        personName:'',
-        phoneNumber:'',
-        walletAddress: '',
-        tranDate:datetime,
-        tokenName:selectedFrom,
-        tranType:'BUY',
-        amount : amount
+    let swappingData = {
+        name:user.name,
+        walletAddress:'gah-'+user.id,
+        fromToken: selectedFrom,
+        toToken: selectedTo,
+        fromAmount: fromAmount,
+        toAmount: toAmount,
+        swapDate:datetime
     }
     axios
-        .post(`${BACKEND_URL}/record/tranadd`, transactionData)
+        .post(`${BACKEND_URL}/record/swapping`, swappingData)
         .then(res =>{
-            
-            window.location.href = '/btc-success'
+            alert('Your swapping is successful !');
         }
             
         ).catch(err =>{
@@ -137,21 +128,24 @@ export default function TokenSwap() {
 
   const handleChangeSelectFrom = (event) => {
     setSelectedFrom(event.target.value);
-  };
-
-  const handleChangeSelectTo = (event) => {
-    setSelectedTo(event.target.value);
-  };
+    if(event.target.value=='gah') {
+        let fromAmountBump = fromAmount;
+        setSelectedTo('mos');
+        setToAmount((fromAmountBump*ega_mos).toFixed(5));
+    }
+    if(event.target.value=='mos') {
+        setSelectedTo('gah');
+        let fromAmountBump = fromAmount;
+        setToAmount((fromAmountBump/ega_mos).toFixed(5));
+    }
+  }
 
   const onChangeFromAmount = e => {
     setFromAmount(e.target.value);
-    
+    if(selectedFrom == 'gah') setToAmount((e.target.value * ega_mos).toFixed(5));
+    if(selectedFrom == 'mos') setToAmount((e.target.value / ega_mos).toFixed(5));
   }
 
-  const onChangeToAmount = e => {
-        setFromAmount(e.target.value);
-        
-    }
 
 const sendToken = async (tokenAmount) => {
     savingToDatabase(tokenAmount);    
@@ -159,6 +153,7 @@ const sendToken = async (tokenAmount) => {
 
 const handleSubmit =(e) =>{
     e.preventDefault();
+    savingToDatabase();  
 }
 
 useEffect(()=>{
@@ -177,6 +172,10 @@ useEffect(()=>{
                         Token Swaping 
                     </div>
                     <div className='card-body'>
+                        <div style={{paddingLeft:25}}>
+                            <p style={{color:'green'}}>* 1 GAH = {(ega_mos).toFixed(6)} ECFA </p>
+                            <p style={{color:'green'}}>* 1 ECFA = {(1/(ega_mos)).toFixed(6)} GAH </p>
+                        </div>
                         <div className='textfield'>
                             <p>From Token : </p>
                             <FormControl sx={{ m: 1, minWidth: 250 }}>
@@ -185,12 +184,13 @@ useEffect(()=>{
                                     onChange={handleChangeSelectFrom}
                                     displayEmpty
                                     inputProps={{ 'aria-label': 'Without label' }}
+                                    
                                 >
-                                <MenuItem value=''>
-                                    <em>None</em>
-                                </MenuItem>
-                                <MenuItem value={'gah'}>GAH TOKEN</MenuItem>
-                                <MenuItem value={'mos'}>MOS TOKEN</MenuItem>
+                                    <MenuItem value=''>
+                                        <em>None</em>
+                                    </MenuItem>
+                                    <MenuItem value={'gah'}>GAH TOKEN</MenuItem>
+                                    <MenuItem value={'mos'}>MOS TOKEN</MenuItem>
                                 </Select>
                             </FormControl>
                             <TextField id="standard-basic" type="number" variant="outlined" value={fromAmount} onChange={onChangeFromAmount} min={50}/>
@@ -203,9 +203,9 @@ useEffect(()=>{
                             <FormControl sx={{ m: 1, minWidth: 250 }}>
                                 <Select
                                     value={selectedTo}
-                                    onChange={handleChangeSelectTo}
                                     displayEmpty
                                     inputProps={{ 'aria-label': 'Without label' }}
+                                    disabled
                                 >
                                 <MenuItem value=''>
                                     <em>None</em>
@@ -214,7 +214,7 @@ useEffect(()=>{
                                 <MenuItem value={'mos'}>MOS TOKEN</MenuItem>
                                 </Select>
                             </FormControl>
-                            <TextField id="standard-basic" type="number" variant="outlined" value={toAmount} onChange={onChangeToAmount} min={50}/>
+                            <TextField id="standard-basic" type="number" variant="outlined" value={toAmount} min={50} disabled/>
                             <p> {selectedTo.toUpperCase()}</p>
                         </div>
 

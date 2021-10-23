@@ -7,18 +7,25 @@ import "bootstrap/dist/css/bootstrap.css";
 import "../../assets/css/common.css";
 import './index.scss'
 import { logoutUser } from "../../actions/authActions";
+import { getTotalInfo } from "../../actions/tokenActions";
+import { getCurrentPrice } from "../../actions/tokenPriceActions";
 import avatar from "../../assets/images/06.png"
 
 
  
 // Here, we display our Navbar
 class MenuBar extends Component {
+    constructor() {
+        super();
+    }
     onLogoutClick = e => {
         e.preventDefault();
         this.props.logoutUser();
     };
+
   render() {
     const { user } = this.props.auth;
+    const { tokenprice } = this.props.tokenprice;
   return (
     <div>
         <div className="position-relative">
@@ -39,6 +46,14 @@ class MenuBar extends Component {
                         </span>
                     </button>
                     <div className="collapse navbar-collapse" id="navbarSupportedContent" style={{background:'#303032'}}>
+                        <ul className="navbar-nav ms-auto navbar-list mb-2 mb-lg-0 align-items-center">
+                            <li className="nav-item " style={{fontSize:20, color:'#1eff12', fontWeight:700}}>
+                                1 GAH = {tokenprice.data?tokenprice.data.egaPrice:0} USD
+                            </li>
+                            <li className="nav-item" style={{fontSize:20, color:'#1eff12', fontWeight:700}}>
+                                1 ECFA = {tokenprice.data?tokenprice.data.mosPrice:0} EUR
+                            </li>
+                        </ul>                        
                         <ul className="navbar-nav ms-auto navbar-list mb-2 mb-lg-0 align-items-center">
                             <li className="nav-item ">
                                 <NavLink className="nav-link" to="/home">Home</NavLink>
@@ -80,13 +95,17 @@ class MenuBar extends Component {
 MenuBar.propTypes = {
     logoutUser: PropTypes.func.isRequired,
     auth: PropTypes.object.isRequired,
+    token: PropTypes.object.isRequired,
+    tokenprice: PropTypes.object.isRequired
 };
 
 const mapStateToProps = state => ({
-    auth: state.auth
+    auth: state.auth,
+    token: state.token,
+    tokenprice: state.tokenprice
 });
 
 export default connect(
     mapStateToProps,
-    { logoutUser }
+    { logoutUser, getTotalInfo, getCurrentPrice }
 )(MenuBar);

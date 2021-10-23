@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import {useDispatch, useSelector } from 'react-redux';
 import "bootstrap/dist/css/bootstrap.css";
 import './index.scss'
 import '../../index.css'
@@ -28,6 +29,8 @@ export function getCalculatedPrice(){
 }
 
 function Home() {
+  
+  const { tokenprice } = useSelector(state => state.tokenprice);
 
     const [hoverLoc, setHoverLoc] = useState(null);
     const [activePoint, setActivePoint] = useState(null);
@@ -88,7 +91,7 @@ function Home() {
           <Header />
           <SideBar />
           <div style={{paddingLeft:'17%', paddingTop:245}}>
-            <p style={{fontSize:28,fontWeight:700,color:'#1eff1e', paddingLeft:"35%"}}>{!fetchingUSDData?currentPrice + 'USD':''} </p>
+            <p style={{fontSize:28,fontWeight:700,color:'#1eff1e', paddingLeft:"35%"}}>{tokenprice.data?tokenprice.data.egaPrice + ' USD':''} </p>
             <div style={{maxWidth:'70%', margin:'auto'}}>
               <div className='row'>
                 <div className='popup'>

@@ -147,6 +147,7 @@ class TokenSell extends Component {
         paymentKind:this.state.radioValue,
         usdPrice:this.state.usdAmount,
         eurPrice:this.state.eurAmount,
+        address:this.state.address,
         paymentState:'pending'
     }
     axios
@@ -283,11 +284,11 @@ class TokenSell extends Component {
                                 <p>Your Wallet Address : <span>{'gah-'+user.id}</span></p>
                                 {this.state.radioValue == 'paypal'?
                                   <div className="form-floating mb-4">
-                                      <input type="text" className="form-control" id="mosAmount" placeholder="0" onChange={this.onChangeAddress} />
+                                      <input type="text" className="form-control" id="address" placeholder="0" onChange={this.onChangeAddress} />
                                       <label>Paypal Accont (E-mail Address)</label>
                                   </div>:
                                   <div className="form-floating mb-4">
-                                      <input type="text" className="form-control" id="mosAmount" placeholder="0" onChange={this.onChangeAddress}/>
+                                      <input type="text" className="form-control" id="address" placeholder="0" onChange={this.onChangeAddress}/>
                                       <label>BitCoin Wallet Address</label>
                                   </div>
                                 }

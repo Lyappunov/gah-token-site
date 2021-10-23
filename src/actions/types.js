@@ -7,3 +7,5 @@ export const USER_UPDATE = "USER_UPDATE";
 
 export const TOKEN_ADD = "TOKEN_ADD";
 export const TOKEN_UPDATE = "TOKEN_UPDATE";
+export const GET_TOTAL_INFO = "GET_TOTAL_INFO";
+export const GET_CURRENT_PRICE = "GET_CURRENT_PRICE";

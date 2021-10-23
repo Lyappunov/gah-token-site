@@ -2,7 +2,9 @@ import axios from "axios";
 import {
     GET_ERRORS,
     TOKEN_ADD,
-    TOKEN_UPDATE
+    TOKEN_UPDATE,
+    GET_TOTAL_INFO,
+    GET_CURRENT_PRICE
 } from "./types";
 
 import {SERVER_MAIN_URL} from '../config'
@@ -45,3 +47,20 @@ export const updateToken = (tokenData) => dispatch => {
         })
     );
 };
+
+export const getTotalInfo = () => dispatch => {
+    axios
+        .get(`${SERVER_MAIN_URL}/gettotalbalance`)
+        .then(res =>
+            dispatch({
+                type: GET_TOTAL_INFO,
+                payload: res,
+            })
+        ).catch(err =>
+        dispatch({
+            type: GET_ERRORS,
+            payload: err.response.data
+        })
+    );
+};
+
