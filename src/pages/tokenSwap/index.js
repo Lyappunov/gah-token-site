@@ -57,22 +57,20 @@ export default function TokenSwap() {
   console.log('current users info is ', user)
   const classes = useStyles();
 
-  const [value, setValue] = React.useState('btc');
-  const [price, setPrice] = useState(0);
-
-  const [open, setOpen] = React.useState(false);
-  const [sendingComplete, setSendingComplete] = useState(false);
 
   const [ega_usd, setEgaUsd] = useState(0);
   const [ega_eur, setEgaEur] = useState(0);
   const [ega_mos, setEgaMos] = useState(0);
-  const [buyLimit, setBuyLimit] = useState();
-  const [limitUSD, setLimitUSD] = useState();
+
   const [selectedFrom, setSelectedFrom] = useState('');
   const [selectedTo, setSelectedTo] = useState('');
   const [fromAmount, setFromAmount] = useState('');
   const [toAmount, setToAmount] = useState('');
-  const [usdtAmount, setUsdtAmount] = useState('');
+
+  const [gahBalance, setGahBalance] = useState(0);
+  const [mosBalance, setMosBalance] = useState(0);
+  const [disabledBTN, setDisabledBTN] = useState('');
+  const [displayerr, setDisplayerr] = useState('none');
 
 
   const getCurrentDate = () => {
@@ -96,6 +94,19 @@ export default function TokenSwap() {
         setEgaUsd(Number(response.data[0].ega_usd));
         setEgaMos(Number(response.data[0].ega_mos));
         setEgaEur(Number(response.data[0].ega_eur));
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }
+
+  const getBalanceData = () =>{
+    axios
+      .get(`${BACKEND_URL}/getwalletbalance/gah-${user.id}`)
+      .then((response) => {
+
+        setGahBalance(Number(response.data.gah));
+        setMosBalance(Number(response.data.mos));
       })
       .catch(function (error) {
         console.log(error);
@@ -132,24 +143,52 @@ export default function TokenSwap() {
         let fromAmountBump = fromAmount;
         setSelectedTo('mos');
         setToAmount((fromAmountBump*ega_mos).toFixed(5));
+        if(fromAmountBump > gahBalance){
+            setDisabledBTN('disabled');
+            setDisplayerr('');
+        }else{
+            setDisabledBTN('');
+            setDisplayerr('none');
+        }
     }
     if(event.target.value=='mos') {
         setSelectedTo('gah');
         let fromAmountBump = fromAmount;
         setToAmount((fromAmountBump/ega_mos).toFixed(5));
+        if(fromAmountBump > mosBalance){
+            setDisabledBTN('disabled');
+            setDisplayerr('');
+        }else{
+            setDisabledBTN('');
+            setDisplayerr('none');
+        }
     }
   }
 
   const onChangeFromAmount = e => {
     setFromAmount(e.target.value);
-    if(selectedFrom == 'gah') setToAmount((e.target.value * ega_mos).toFixed(5));
-    if(selectedFrom == 'mos') setToAmount((e.target.value / ega_mos).toFixed(5));
+    if(selectedFrom == 'gah') {
+        setToAmount((e.target.value * ega_mos).toFixed(5))
+        if(e.target.value > gahBalance){
+            setDisabledBTN('disabled');
+            setDisplayerr('');
+        }else{
+            setDisabledBTN('');
+            setDisplayerr('none');
+        }
+    };
+    if(selectedFrom == 'mos') {
+        setToAmount((e.target.value / ega_mos).toFixed(5));
+        if(e.target.value > mosBalance){
+            setDisabledBTN('disabled');
+            setDisplayerr('');
+        }else{
+            setDisabledBTN('');
+            setDisplayerr('none');
+        }
+    }
   }
 
-
-const sendToken = async (tokenAmount) => {
-    savingToDatabase(tokenAmount);    
-}
 
 const handleSubmit =(e) =>{
     e.preventDefault();
@@ -158,6 +197,7 @@ const handleSubmit =(e) =>{
 
 useEffect(()=>{
     getData();
+    getBalanceData();
 }, [])
 
   return (
@@ -172,9 +212,16 @@ useEffect(()=>{
                         Token Swaping 
                     </div>
                     <div className='card-body'>
-                        <div style={{paddingLeft:25}}>
-                            <p style={{color:'green'}}>* 1 GAH = {(ega_mos).toFixed(6)} ECFA </p>
-                            <p style={{color:'green'}}>* 1 ECFA = {(1/(ega_mos)).toFixed(6)} GAH </p>
+                        <div className="row">
+                            <div className='col-lg-5'>
+                                <p style={{color:'green'}}>* 1 GAH = {(ega_mos).toFixed(6)} ECFA </p>
+                                <p style={{color:'green'}}>* 1 ECFA = {(1/(ega_mos)).toFixed(6)} GAH </p>
+                            </div>
+                        
+                            <div className='col-lg-7'>
+                                <p style={{color:'green'}}>* GAH balance : {gahBalance} GAH</p>
+                                <p style={{color:'green'}}>* E-CFA balance : {mosBalance} ECFA</p>
+                            </div>
                         </div>
                         <div className='textfield'>
                             <p>From Token : </p>
@@ -196,6 +243,9 @@ useEffect(()=>{
                             <TextField id="standard-basic" type="number" variant="outlined" value={fromAmount} onChange={onChangeFromAmount} min={50}/>
                             <p> {selectedFrom.toUpperCase()}</p>
                             
+                        </div>
+                        <div>
+                            <p style={{color:'#ff0000', display:displayerr}} >* Invalid amount because it's more than the balance in your wallet. </p>
                         </div>
                         <br/>
                         <div className='textfield'>
@@ -220,7 +270,7 @@ useEffect(()=>{
 
                     </div>
                     <div className='card-footer'>
-                        <button type="submit" className="btn btn-primary">Swap</button>
+                        <button type="submit" className="btn btn-primary" disabled={disabledBTN}>Swap</button>
                     </div>
                 </div>
             </form>
