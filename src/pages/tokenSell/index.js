@@ -27,7 +27,7 @@ class TokenSell extends Component {
     super(props);
     this.state = { 
       ega_usd: '',
-      salelimit: '',
+      salelimit: 0,
       limitega: 0,
       mosAmount : 0,
       usdAmount : 0,
@@ -37,6 +37,10 @@ class TokenSell extends Component {
       opening:false,
       radioValue:'paypal',
       address : '',
+      mosBalance:0,
+      disbaledBTN:'',
+      displayerr1:'none',
+      displayerr2:'none',
       errors: {}
     };
     this.getData = this.getData.bind(this);
@@ -45,6 +49,9 @@ class TokenSell extends Component {
     this.handleOpen = this.handleOpen.bind(this);
     this.handleClose = this.handleClose.bind(this);
     this.savingToDatabase = this.savingToDatabase.bind(this);
+
+    this.user = this.props.auth;
+    
   }
 
   getCurrentDate = () => {
@@ -67,8 +74,17 @@ class TokenSell extends Component {
     var mos_eur = this.state.mos_eur;
     var usd_amount = Number(e.target.value) * mos_usd;
     var eur_amount = Number(e.target.value) * mos_eur;
-    this.setState({ usdAmount : usd_amount.toFixed(6) })
-    this.setState({ eurAmount : eur_amount.toFixed(6) })
+    this.setState({ usdAmount : usd_amount.toFixed(6) });
+    this.setState({ eurAmount : eur_amount.toFixed(6) });
+    if(e.target.value > this.state.mosBalance){
+      this.setState({disbaledBTN:'disabled', displayerr1:'', displayerr2:'none'})
+      if(e.target.value > Number(this.state.limitega)){
+        this.setState({disbaledBTN:'disabled', displayerr1:'', displayerr2:''})
+      } 
+    } else {
+      this.setState({disbaledBTN:'', displayerr1:'none', displayerr2:'none'})
+    }
+    
   }
 
   onChangeUSD = e => {
@@ -79,6 +95,11 @@ class TokenSell extends Component {
     var eur_amount = mos_amount * mos_eur;
     this.setState({ mosAmount : mos_amount.toFixed(6) })
     this.setState({ eurAmount : eur_amount.toFixed(6) })
+    if(e.target.value > this.state.salelimit){
+      this.setState({disbaledBTN:'disabled', displayerr2:''})
+    } else {
+      this.setState({disbaledBTN:'', displayerr2:'none'})
+    }
   }
 
   onChangeEUR = e => {
@@ -122,6 +143,7 @@ class TokenSell extends Component {
   };
   componentDidMount() {
     this.getData();
+    this.getBalanceData();
   }
 
   componentWillReceiveProps(nextProps) {
@@ -196,10 +218,22 @@ class TokenSell extends Component {
       });
   }
 
+  getBalanceData = () =>{
+    axios
+      .get(`${BACKEND_URL}/getwalletbalance/gah-${this.user.user.id}`)
+      .then((response) => {
+        this.setState({mosBalance:Number(response.data.mos)});
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }
+
 
   // This following section will display the table with the records of individuals.
   render() {
     const { user } = this.props.auth;
+    console.log('users id is ', this.state.displayerr1);
     return (
       <div>
         <Header />
@@ -211,10 +245,16 @@ class TokenSell extends Component {
                             <div className="card-header-tb" style={{paddingRight:70}}>
                                 <h4 className="card-title text-white">Token Sale</h4>
                             </div>
-                            <div style={{paddingLeft:25, paddingTop:25}}>
-                                <p style={{color:'green'}}>* 1 E-CFA = {(this.state.mos_usd).toFixed(6)} USD </p>
-                                <p style={{color:'green'}}>* 1 E-CFA = {(this.state.mos_eur)} EURO </p>
+                            <div className='row' style={{paddingLeft:25, paddingTop:25}}>
+                              <div className='col-lg-5'>
+                                  <p style={{color:'green'}}>* 1 E-CFA = {(this.state.mos_usd).toFixed(6)} USD </p>
+                                  <p style={{color:'green'}}>* 1 E-CFA = {(this.state.mos_eur)} EURO </p>
+                              </div>
+                              <div className='col-lg-7'>
+                                  <p style={{color:'green'}}>E-CFA balance : {this.state.mosBalance} ECFA</p>
+                              </div>
                             </div>
+                            
                             <div className="d-flex mt-4 ms-4 me-4 justify-content-between" style={{paddingBottom : 20}}>
                             
                               <form onSubmit={this.handleSubmit} style={{width:'100%',margin:'auto'}}>
@@ -226,19 +266,28 @@ class TokenSell extends Component {
                                               <input type="number" className="form-control" id="mosAmount" placeholder="0" onChange={this.onChangeMOS} value={this.state.mosAmount}/>
                                               <label>E-CFA</label>
                                           </div>
+                                          <div>
+                                            <p style={{color:'#ff0000', display:this.state.displayerr1}} >* Invalid amount because it's more than the balance in your wallet. </p>
+                                          </div>
+                                          <div>
+                                            <p style={{color:'#ff0000', display:this.state.displayerr2}} >* Invalid amount because it's more than the maximum amounts. </p>
+                                          </div>
                                           <div className="form-floating mb-4">
                                               <input type="number" className="form-control" id="usdAmount" placeholder="0" onChange={this.onChangeUSD} value={this.state.usdAmount}/>
                                               <label>USD</label>
+                                          </div>
+                                          <div>
+                                            <p style={{color:'#ff0000', display:this.state.displayerr2}} >* Invalid amount because it's more than the maximum amounts. </p>
                                           </div>
                                           <div className="form-floating mb-4">
                                               <input type="number" className="form-control" id="eurAmount" placeholder="0" onChange={this.onChangeEUR} value={this.state.eurAmount}/>
                                               <label>EURO</label>
                                           </div>
-                                          <p style={{color:'grey'}}>* You can sell the your token for maximum {this.state.salelimit} USD ({this.state.limitega} E-CFA)</p>
+                                          <p style={{color:'grey'}}>* You can sell the your token for maximum {this.state.salelimit} USD ({this.state.limitega} ECFA)</p>
                                       </div>
                                       <div className="modal-footer">
                                           {/* <button type="button" className="btn btn-secondary" onClick={this.editClose}>Close</button> */}
-                                          <button type="submit" className="btn btn-primary">Sale Subscribe</button>
+                                          <button type="submit" className="btn btn-primary" disabled={this.state.disbaledBTN}>Sale Subscribe</button>
                                       </div>
                                 </div>
                               </form>
