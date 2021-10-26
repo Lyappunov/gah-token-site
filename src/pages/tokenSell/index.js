@@ -27,13 +27,17 @@ class TokenSell extends Component {
     super(props);
     this.state = { 
       ega_usd: '',
+      ega_btc:0,
       salelimit: 0,
       limitega: 0,
+      mins:0,
       mosAmount : 0,
       usdAmount : 0,
       eurAmount : 0,
+      btcAmount : 0,
       mos_eur:0,
       mos_usd:0,
+      mos_btc:0,
       opening:false,
       radioValue:'paypal',
       address : '',
@@ -67,38 +71,85 @@ class TokenSell extends Component {
     var currentDateTime = thisMonthToday + 'T' + time + 'Z';
     return currentDateTime ;
   }
+
+  amountVerify = () => {
+    if(this.state.mosAmount > this.state.mosBalance) {
+      this.setState({disbaledBTN:'disabled', displayerr1:'', displayerr2:'none'});
+      if(this.state.mosAmount > Number(this.state.limitega))
+        this.setState({disbaledBTN:'disabled', displayerr1:'', displayerr2:''});
+    } else {
+      this.setState({disbaledBTN:'', displayerr1:'none', displayerr2:'none'})
+    }
+  }
   
   onChangeMOS = e => {
     this.setState({ mosAmount: e.target.value });
     var mos_usd =  this.state.mos_usd;
     var mos_eur = this.state.mos_eur;
+    var mos_btc = this.state.mos_btc;
     var usd_amount = Number(e.target.value) * mos_usd;
     var eur_amount = Number(e.target.value) * mos_eur;
+    var btc_amount = Number(e.target.value) * mos_btc;
     this.setState({ usdAmount : usd_amount.toFixed(6) });
     this.setState({ eurAmount : eur_amount.toFixed(6) });
-    if(e.target.value > this.state.mosBalance){
-      this.setState({disbaledBTN:'disabled', displayerr1:'', displayerr2:'none'})
-      if(e.target.value > Number(this.state.limitega)){
-        this.setState({disbaledBTN:'disabled', displayerr1:'', displayerr2:''})
-      } 
-    } else {
+    this.setState({ btcAmount : btc_amount.toFixed(6) });
+    if(e.target.value > this.state.mosBalance) {
+      this.setState({disbaledBTN:'disabled', displayerr1:'', displayerr2:'none'});
+      if(e.target.value > Number(this.state.limitega))
+        this.setState({disbaledBTN:'disabled', displayerr1:'', displayerr2:''});
+    } else if(e.target.value < Number(this.state.mins)){
+      this.setState({disbaledBTN:'disabled', displayerr1:'none', displayerr2:''});
+    } 
+    else {
+      this.setState({disbaledBTN:'', displayerr1:'none', displayerr2:'none'})
+    }   
+  }
+
+  onChangeBTC = e => {
+    this.setState({ btcAmount: e.target.value });
+    var mos_usd =  this.state.mos_usd;
+    var mos_eur = this.state.mos_eur;
+    var mos_btc = this.state.mos_btc;
+    var mos_amount = Number(e.target.value) / mos_btc;
+    var eur_amount = mos_amount * mos_eur;
+    var usd_amount = mos_amount * mos_usd;
+    this.setState({ mosAmount : mos_amount.toFixed(6) })
+    this.setState({ eurAmount : eur_amount.toFixed(6) })
+    this.setState({ usdAmount : usd_amount.toFixed(6) })
+    if(mos_amount > this.state.mosBalance) {
+      this.setState({disbaledBTN:'disabled', displayerr1:'', displayerr2:'none'});
+      if(mos_amount > Number(this.state.limitega))
+        this.setState({disbaledBTN:'disabled', displayerr1:'', displayerr2:''});
+    }
+    else if(mos_amount < Number(this.state.mins)){
+      this.setState({disbaledBTN:'disabled', displayerr1:'none', displayerr2:''});
+    }  
+    else {
       this.setState({disbaledBTN:'', displayerr1:'none', displayerr2:'none'})
     }
-    
   }
 
   onChangeUSD = e => {
     this.setState({ usdAmount: e.target.value });
     var mos_usd =  this.state.mos_usd;
     var mos_eur = this.state.mos_eur;
+    var mos_btc = this.state.mos_btc;
     var mos_amount = Number(e.target.value) / mos_usd;
     var eur_amount = mos_amount * mos_eur;
-    this.setState({ mosAmount : mos_amount.toFixed(6) })
-    this.setState({ eurAmount : eur_amount.toFixed(6) })
-    if(e.target.value > this.state.salelimit){
-      this.setState({disbaledBTN:'disabled', displayerr2:''})
-    } else {
-      this.setState({disbaledBTN:'', displayerr2:'none'})
+    var btc_amount = mos_amount * mos_btc;
+    this.setState({ mosAmount : mos_amount.toFixed(6) });
+    this.setState({ eurAmount : eur_amount.toFixed(6) });
+    this.setState({ btcAmount : btc_amount.toFixed(6) });
+    if(mos_amount > this.state.mosBalance) {
+      this.setState({disbaledBTN:'disabled', displayerr1:'', displayerr2:'none'});
+      if(mos_amount > Number(this.state.limitega))
+        this.setState({disbaledBTN:'disabled', displayerr1:'none', displayerr2:''});
+    } 
+    else if(mos_amount < Number(this.state.mins)){
+      this.setState({disbaledBTN:'disabled', displayerr1:'', displayerr2:''});
+    } 
+    else {
+      this.setState({disbaledBTN:'', displayerr1:'none', displayerr2:'none'})
     }
   }
 
@@ -106,10 +157,25 @@ class TokenSell extends Component {
     this.setState({ eurAmount: e.target.value });
     var mos_usd =  this.state.mos_usd;
     var mos_eur = this.state.mos_eur;
+    var mos_btc = this.state.mos_btc;
+    
     var mos_amount = Number(e.target.value) / mos_eur;
     var usd_amount = mos_amount * mos_usd;
+    var btc_amount = mos_amount * mos_btc;
     this.setState({ mosAmount : mos_amount.toFixed(6) })
     this.setState({ usdAmount : usd_amount.toFixed(6) })
+    this.setState({ btcAmount : btc_amount.toFixed(6) });
+    if(mos_amount > this.state.mosBalance) {
+      this.setState({disbaledBTN:'disabled', displayerr1:'', displayerr2:'none'});
+      if(mos_amount > Number(this.state.limitega))
+        this.setState({disbaledBTN:'disabled', displayerr1:'', displayerr2:''});
+    } 
+    else if(mos_amount < Number(this.state.mins)){
+      this.setState({disbaledBTN:'disabled', displayerr1:'none', displayerr2:''});
+    } 
+    else {
+      this.setState({disbaledBTN:'', displayerr1:'none', displayerr2:'none'})
+    }
   }
   handleRadio = (event) => {
     this.setState({radioValue:event.target.value});
@@ -169,6 +235,7 @@ class TokenSell extends Component {
         paymentKind:this.state.radioValue,
         usdPrice:this.state.usdAmount,
         eurPrice:this.state.eurAmount,
+        btcPrice:this.state.btcAmount,
         address:this.state.address,
         paymentState:'pending'
     }
@@ -194,10 +261,13 @@ class TokenSell extends Component {
         console.log('the result of getData method is ', response.data)
         this.setState({ega_usd: Number(response.data[0].ega_usd)});
         this.setState({mos_usd: Number(response.data[0].ega_usd)/Number(response.data[0].ega_mos)});
+        this.setState({mos_btc: Number(response.data[0].ega_btc)/Number(response.data[0].ega_mos)});
+        this.setState({ega_btc: response.data[0].ega_btc});
         axios
           .get(`${SERVER_MAIN_URL}/limitamount`)
           .then((reslim) => {
             this.setState({salelimit: Number(reslim.data[0].saleMAX)});
+            this.setState({mins: Number(reslim.data[0].buyMIN)});
             let limit_ega = (Number(reslim.data[0].saleMAX)/(Number(response.data[0].ega_usd)/Number(response.data[0].ega_mos))).toFixed(6);
             this.setState({ limitega : limit_ega });
             axios
@@ -233,7 +303,6 @@ class TokenSell extends Component {
   // This following section will display the table with the records of individuals.
   render() {
     const { user } = this.props.auth;
-    console.log('users id is ', this.state.displayerr1);
     return (
       <div>
         <Header />
@@ -252,6 +321,7 @@ class TokenSell extends Component {
                               </div>
                               <div className='col-lg-7'>
                                   <p style={{color:'green'}}>E-CFA balance : {this.state.mosBalance} ECFA</p>
+                                  <p style={{color:'green'}}>1 E-CFA : {this.state.ega_btc} BTC</p>
                               </div>
                             </div>
                             
@@ -270,20 +340,23 @@ class TokenSell extends Component {
                                             <p style={{color:'#ff0000', display:this.state.displayerr1}} >* Invalid amount because it's more than the balance in your wallet. </p>
                                           </div>
                                           <div>
-                                            <p style={{color:'#ff0000', display:this.state.displayerr2}} >* Invalid amount because it's more than the maximum amounts. </p>
+                                            <p style={{color:'#ff0000', display:this.state.displayerr2}} >* Invalid amount because it's more than the maximum amounts or less than minimum amounts. </p>
+                                          </div>
+                                          <div className="form-floating mb-4">
+                                              <input type="number" className="form-control" id="btcAmount" placeholder="0" onChange={this.onChangeBTC} value={this.state.btcAmount}/>
+                                              <label>BTC</label>
                                           </div>
                                           <div className="form-floating mb-4">
                                               <input type="number" className="form-control" id="usdAmount" placeholder="0" onChange={this.onChangeUSD} value={this.state.usdAmount}/>
                                               <label>USD</label>
                                           </div>
-                                          <div>
-                                            <p style={{color:'#ff0000', display:this.state.displayerr2}} >* Invalid amount because it's more than the maximum amounts. </p>
-                                          </div>
+                                          
                                           <div className="form-floating mb-4">
                                               <input type="number" className="form-control" id="eurAmount" placeholder="0" onChange={this.onChangeEUR} value={this.state.eurAmount}/>
                                               <label>EURO</label>
                                           </div>
                                           <p style={{color:'grey'}}>* You can sell the your token for maximum {this.state.salelimit} USD ({this.state.limitega} ECFA)</p>
+                                          <p style={{color:'grey'}}>* If you would like to sell E-CFA token in BTC, You should the token for minimum {this.state.mins} ECFA</p>
                                       </div>
                                       <div className="modal-footer">
                                           {/* <button type="button" className="btn btn-secondary" onClick={this.editClose}>Close</button> */}
