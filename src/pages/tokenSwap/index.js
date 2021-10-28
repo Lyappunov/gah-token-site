@@ -141,7 +141,7 @@ export default function TokenSwap() {
     setSelectedFrom(event.target.value);
     if(event.target.value=='gah') {
         let fromAmountBump = fromAmount;
-        setSelectedTo('mos');
+        setSelectedTo('efranc');
         setToAmount((fromAmountBump*ega_mos).toFixed(5));
         if(fromAmountBump > gahBalance){
             setDisabledBTN('disabled');
@@ -151,7 +151,7 @@ export default function TokenSwap() {
             setDisplayerr('none');
         }
     }
-    if(event.target.value=='mos') {
+    if(event.target.value=='efranc') {
         setSelectedTo('gah');
         let fromAmountBump = fromAmount;
         setToAmount((fromAmountBump/ega_mos).toFixed(5));
@@ -177,7 +177,7 @@ export default function TokenSwap() {
             setDisplayerr('none');
         }
     };
-    if(selectedFrom == 'mos') {
+    if(selectedFrom == 'efranc') {
         setToAmount((e.target.value / ega_mos).toFixed(5));
         if(e.target.value > mosBalance){
             setDisabledBTN('disabled');
@@ -237,7 +237,7 @@ useEffect(()=>{
                                         <em>None</em>
                                     </MenuItem>
                                     <MenuItem value={'gah'}>GAH TOKEN</MenuItem>
-                                    <MenuItem value={'mos'}>MOS TOKEN</MenuItem>
+                                    <MenuItem value={'efranc'}>E-FRANC</MenuItem>
                                 </Select>
                             </FormControl>
                             <TextField id="standard-basic" type="number" variant="outlined" value={fromAmount} onChange={onChangeFromAmount} min={50}/>
@@ -261,7 +261,7 @@ useEffect(()=>{
                                     <em>None</em>
                                 </MenuItem>
                                 <MenuItem value={'gah'}>GAH TOKEN</MenuItem>
-                                <MenuItem value={'mos'}>MOS TOKEN</MenuItem>
+                                <MenuItem value={'efranc'}>E-FRANC</MenuItem>
                                 </Select>
                             </FormControl>
                             <TextField id="standard-basic" type="number" variant="outlined" value={toAmount} min={50} disabled/>

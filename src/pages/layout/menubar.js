@@ -67,12 +67,16 @@ class MenuBar extends Component {
                             <li className="nav-item ">
                                 <NavLink className="nav-link" to="/tokenswap">Token Swap</NavLink>
                             </li>
+                            <li className="nav-item ">
+                                <NavLink className="nav-link" to="/tokensend">Token Send</NavLink>
+                            </li>
                             <li className="nav-item dropdown">
                                 <a className="nav-link py-0 d-flex align-items-center" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                     <img src={avatar} alt="User-Profile" className="img-fluid avatar avatar-50 avatar-rounded"/>
                                     <div className="caption ms-3 ">
                                         <h6 className="mb-0 caption-title">{user.name}</h6>
-                                        <p className="mb-0 caption-sub-title">Super Admin</p>
+                                        {/* <p className="mb-0 caption-sub-title">Super Admin</p> */}
+                                        <p className="mb-0 caption-sub-title" style={{fontSize:12}}>{"gah-" + user.id}</p>
                                     </div>
                                 </a>
                                 <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">

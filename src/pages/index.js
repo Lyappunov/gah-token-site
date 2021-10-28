@@ -17,6 +17,7 @@ import Signup from "../components/auth/signup";
 import TokenBuy from "../pages/tokenBuy";
 import TokenSell from "../pages/tokenSell";
 import TokenSwap from "../pages/tokenSwap";
+import TokenSend from "../pages/tokenSend";
 import setAuthToken from "../utils/setAuthToken";
 
 import Home from "../pages/home";
@@ -70,6 +71,9 @@ function Pages  ()  {
                 </PrivateRoute>
                 <PrivateRoute exact path="/tokenswap">
                   <TokenSwap />
+                </PrivateRoute>
+                <PrivateRoute exact path="/tokensend">
+                  <TokenSend />
                 </PrivateRoute>
             </Switch>
             

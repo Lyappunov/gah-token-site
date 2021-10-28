@@ -50,6 +50,20 @@ export default function PaymentBox(props) {
     const [senderPrivateKey, setSenderPrivateKey] = useState('');
 
     const classes = useStyles();
+
+    const getCurrentDate = () => {
+        var today = new Date();
+        var thisyear = today.getFullYear();
+        var thisMonth = today.getMonth()<10?'0'+(today.getMonth() + 1):(today.getMonth() + 1);
+        var thisDay = today.getDate()<10?'0'+(today.getDate()):today.getDate();
+        var thisMonthToday = thisyear+'-'+thisMonth+'-'+thisDay;
+        var Hours = today.getHours()<10?'0'+today.getHours():today.getHours();
+        var Minutes = today.getMinutes()<10?'0'+today.getMinutes():today.getMinutes();
+        var Seconds = today.getSeconds()<10?'0'+today.getSeconds():today.getSeconds();
+        var time = Hours+ ":" + Minutes + ":" + Seconds;
+        var currentDateTime = thisMonthToday + 'T' + time + 'Z';
+        return currentDateTime ;
+      }
     
     const onChangeAddress = (e) => {
         setSenderAddress(e.target.value);
@@ -75,27 +89,27 @@ export default function PaymentBox(props) {
         })
       }
     const saveSubscribeDatabase = () => {
-        
-          const transactionData = {
-            personName:user.name,
-            address:recipientAddress,
-            walletAddress: "gah-"+user.id,
-            tranDate:'',
-            tokenName:'e-franc',
-            tranType:'BUY',
-            amount : props.amount,
-            price : props.price + ' BTC'
-          }
-          axios
-          .post(`${BACKEND_URL}/record/tranadd`, transactionData)
-          .then((res) => {
-              alert('Your payout successfull !');
-              window.location.href = '/tokenbuy';
-          })
-          .catch((err) => {
-              console.log(err);
-              alert('Something went wrong with your payout.');
-          })
+        var datetime =  getCurrentDate();
+        const transactionData = {
+        personName:user.name,
+        address:recipientAddress,
+        walletAddress: "gah-"+user.id,
+        tranDate:datetime,
+        tokenName:'e-franc',
+        tranType:'BUY',
+        amount : props.amount,
+        price : props.price + ' BTC'
+        }
+        axios
+        .post(`${BACKEND_URL}/record/tranadd`, transactionData)
+        .then((res) => {
+            alert('Your payout successfull !');
+            window.location.href = '/tokenbuy';
+        })
+        .catch((err) => {
+            console.log(err);
+            alert('Something went wrong with your payout.');
+        })
         
      }
     
