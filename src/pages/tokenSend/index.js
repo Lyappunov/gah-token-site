@@ -49,7 +49,7 @@ export default function TokenSend() {
   const [address, setAddress] = useState('');
 
   const [mosBalance, setMosBalance] = useState(0);
-  const [disabledBTN, setDisabledBTN] = useState('');
+  const [disabledBTN, setDisabledBTN] = useState('disabled');
   const [displayerr, setDisplayerr] = useState('none');
 
 
