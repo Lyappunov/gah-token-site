@@ -166,16 +166,16 @@ export default function TokenBuy() {
     setCryptoAmount(e.target.value);
     if(token == 'gah'){
         var usd_amount = Number(e.target.value) * ega_usd;
-        setUsdtAmount(usd_amount.toFixed(5))
-        setPriceUSD(usd_amount.toFixed(5));
+        setUsdtAmount(usd_amount.toFixed(6))
+        setPriceUSD(usd_amount.toFixed(6));
     }
     if (token == 'mos'){
         var usd_amount = Number(e.target.value) * (ega_usd/ega_mos);
-        setUsdtAmount(usd_amount.toFixed(5))
-        setPriceUSD(usd_amount.toFixed(5));
+        setUsdtAmount(usd_amount.toFixed(6))
+        setPriceUSD(usd_amount.toFixed(6));
         var btc_amount = Number(e.target.value) * (ega_btc/ega_mos);
-        setBTCAmount(btc_amount.toFixed(5))
-        setPriceBTC(btc_amount.toFixed(5));
+        setBTCAmount(btc_amount.toFixed(6))
+        setPriceBTC(btc_amount.toFixed(6));
         if(e.target.value < buyLimit){
             setDisplayerr('');
             setDisabledBTN('disabled');

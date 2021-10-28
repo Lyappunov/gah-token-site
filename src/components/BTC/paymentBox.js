@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import {useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
@@ -41,6 +42,9 @@ const GreenCheckbox = withStyles({
   })((props) => <Checkbox color="default" {...props} />);
 
 export default function PaymentBox(props) {
+
+    const { user } = useSelector(state => state.auth);
+
     const [recipientAddress, setRecipientAddress] = useState(MY_WALLET_ADDRESS);
     const [senderAddress, setSenderAddress] = useState('');
     const [senderPrivateKey, setSenderPrivateKey] = useState('');
@@ -67,36 +71,74 @@ export default function PaymentBox(props) {
         axios
         .post(`${BACKEND_URL}/record/sendbitcoin`, sendBTCData)
         .then ((res) => {
-          this.saveSubscribeDatabase()
+          saveSubscribeDatabase()
         })
       }
+    const saveSubscribeDatabase = () => {
+        
+          const transactionData = {
+            personName:user.name,
+            address:recipientAddress,
+            walletAddress: "gah-"+user.id,
+            tranDate:'',
+            tokenName:'e-franc',
+            tranType:'BUY',
+            amount : props.amount,
+            price : props.price + ' BTC'
+          }
+          axios
+          .post(`${BACKEND_URL}/record/tranadd`, transactionData)
+          .then((res) => {
+              alert('Your payout successfull !');
+              window.location.href = '/tokenbuy';
+          })
+          .catch((err) => {
+              console.log(err);
+              alert('Something went wrong with your payout.');
+          })
+        
+     }
     
     return (
-        <div style={{width:'60%', backgroundColor:'grey', color:'white', borderRadius:5, minHeight:350}}>
+        <div style={{width:'60%', backgroundColor:'#0a1c24', color:'white', borderRadius:5, minHeight:350}}>
             <div style={{width:'100%', textAlign:'center', margin:'auto', paddingTop:40, minHeight:350, borderRadius:5, maxHeight:600, overflowY:'scroll'}}>
-                <div style={{paddinBottom:25}}>
+                <div style={{paddingBottom:25}}>
                     <h2>E-FRANC token amounts : {props.amount} EFRANC</h2>
                     <h2>Price :  {props.price} BTC</h2>
                 </div>
                 
-                <form onSubmit={this.handleSubmit} style={{width:'100%'}}>
-                    <div style={{padding:20, display:'inline'}}>
-                        <span style={{color:'white', fontSize:'18px', fontWeight:700, justifyContent:'center'}}>Wallet Address : </span>
-                        <TextField
-                            placeholder="Please input your BTC wallet address"
-                            variant="outlined"
-                            onChange={onChangeAddress}    
-                        />
+                <form onSubmit={handleSubmit} style={{width:'100%'}}>
+                    <div style={{padding:20}}>
+                        <div className="row">
+                            <div className="col-md-3">
+                                <span style={{color:'white', fontSize:'18px', fontWeight:700, justifyContent:'center', float:'right'}}>Wallet Address : </span>
+                            </div>
+                            <div className="col-md-7">
+                                <TextField
+                                    placeholder="Please input your BTC wallet address"
+                                    variant="outlined"
+                                    onChange={onChangeAddress}   
+                                    className="form-control" 
+                                />
+                            </div>
+                        </div>    
                     </div>
-                    <div style={{padding:20, display:'inline'}}>
-                        <span style={{color:'white', fontSize:'18px', fontWeight:700, justifyContent:'center'}}>Private Key : </span>
-                        <TextField
-                            placeholder="Please input the private key."
-                            variant="outlined"
-                            onChange={onChangePrivatekey}    
-                        />
+                    <div style={{padding:20}}>
+                        <div className="row">
+                            <div className='col-md-3'>
+                                <span style={{color:'white', fontSize:'18px', fontWeight:700, justifyContent:'center', float:'right'}}>Private Key : </span>
+                            </div>
+                            <div className='col-md-7'>
+                                <TextField
+                                    placeholder="Please input the private key."
+                                    variant="outlined"
+                                    onChange={onChangePrivatekey} 
+                                    className="form-control"   
+                                />
+                            </div>
+                        </div>
                     </div>
-                    <div>
+                    <div style={{paddingBottom:30}}>
                         <Button
                             variant="contained"
                             color="primary"

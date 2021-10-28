@@ -92,7 +92,7 @@ class PaypalButton extends React.Component {
       
     }
     return (
-      <div style={{width:'60%', backgroundColor:'grey', color:'white', borderRadius:5, minHeight:450}}>
+      <div style={{width:'60%', backgroundColor:'#0a1c24', color:'white', borderRadius:5, minHeight:450}}>
         {/* {loading && <Spinner />} */}
             <div style={{width:'100%', textAlign:'center', margin:'auto', paddingTop:40, minHeight:450, borderRadius:5, maxHeight:600, overflowY:'scroll'}}>
                 {showButtons && (
