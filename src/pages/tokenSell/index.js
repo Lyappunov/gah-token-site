@@ -232,7 +232,7 @@ class TokenSell extends Component {
     axios
         .post(`${BACKEND_URL}/record/salesubscribe`, subscribeData)
         .then(res =>{
-            alert("Your subscribe successfull !")
+            alert("Your subscribe successfull ! Your subscribe will be approve in 24 hours.")
             this.handleClose();
         }
             
