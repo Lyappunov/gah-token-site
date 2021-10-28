@@ -58,7 +58,8 @@ export default function TokenBuy() {
   const classes = useStyles();
 
   const [value, setValue] = React.useState('paypal');
-  const [price, setPrice] = useState(0);
+  const [priceUSD, setPriceUSD] = useState(0);
+  const [priceBTC, setPriceBTC] = useState(0);
 
   const [open, setOpen] = React.useState(false);
   const [showPaypal, setShowPaypal] = useState(false);
@@ -68,13 +69,16 @@ export default function TokenBuy() {
 
   const [ega_usd, setEgaUsd] = useState(0);
   const [ega_mos, setEgaMos] = useState(0);
+  const [ega_btc, setEgaBTC] = useState(0);
   const [buyLimit, setBuyLimit] = useState(0);
   const [limitUSD, setLimitUSD] = useState(0);
+  const [limitBTC, setLimitBTC] = useState(0);
   const [selectedCrypto, setSelectedCrypto] = useState();
   const [cryptoAmount, setCryptoAmount] = useState(0);
   const [usdtAmount, setUsdtAmount] = useState(0);
+  const [btcAmount, setBTCAmount] = useState(0);
 
-  const [disabledBTN, setDisabledBTN] = useState('');
+  const [disabledBTN, setDisabledBTN] = useState('disabled');
   const [displayerr, setDisplayerr] = useState('none');
 
 
@@ -98,12 +102,15 @@ export default function TokenBuy() {
         console.log('the result of getData method is ', response.data)
         setEgaUsd(Number(response.data[0].ega_usd));
         setEgaMos(Number(response.data[0].ega_mos));
+        setEgaBTC(Number(response.data[0].ega_btc));
         axios
           .get(`${BACKEND_URL}/limitamount`)
           .then((reslim) => {
             setBuyLimit(Number(reslim.data[0].buyMIN))
             let limit_usd = (Number(reslim.data[0].buyMIN)*Number(response.data[0].ega_usd)).toFixed(6);
+            let limit_btc = (Number(reslim.data[0].buyMIN)*Number(response.data[0].ega_btc)).toFixed(6);
             setLimitUSD(limit_usd);
+            setLimitBTC(limit_btc);
           })
           .catch(function (err) {
             console.log(err);
@@ -160,12 +167,15 @@ export default function TokenBuy() {
     if(token == 'gah'){
         var usd_amount = Number(e.target.value) * ega_usd;
         setUsdtAmount(usd_amount.toFixed(5))
-        setPrice(usd_amount.toFixed(5));
+        setPriceUSD(usd_amount.toFixed(5));
     }
     if (token == 'mos'){
         var usd_amount = Number(e.target.value) * (ega_usd/ega_mos);
         setUsdtAmount(usd_amount.toFixed(5))
-        setPrice(usd_amount.toFixed(5));
+        setPriceUSD(usd_amount.toFixed(5));
+        var btc_amount = Number(e.target.value) * (ega_btc/ega_mos);
+        setBTCAmount(btc_amount.toFixed(5))
+        setPriceBTC(btc_amount.toFixed(5));
         if(e.target.value < buyLimit){
             setDisplayerr('');
             setDisabledBTN('disabled');
@@ -178,14 +188,48 @@ export default function TokenBuy() {
 
   const onChangeUSDAmount = e => {
     setUsdtAmount(e.target.value);
-    setPrice(e.target.value);
+    setPriceUSD(e.target.value);
     if(token == 'gah'){
         var crypto_amount = Number(e.target.value) / ega_usd;
         setCryptoAmount(crypto_amount);
     }
     if(token == 'mos'){
         var crypto_amount = Number(e.target.value) / (ega_usd/ega_mos);
+        var btc_amount = Number(e.target.value) / (ega_btc/ega_mos);
         setCryptoAmount(crypto_amount);
+        setPriceBTC(btc_amount);
+        setBTCAmount(btc_amount);
+
+        if(crypto_amount < buyLimit){
+            setDisplayerr('');
+            setDisabledBTN('disabled');
+        } else {
+            setDisplayerr('none');
+            setDisabledBTN('')
+        }
+    }
+  }
+
+  const onChangeBTCAmount = e => {
+    setBTCAmount(e.target.value);
+    setPriceBTC(e.target.value);
+    if(token == 'gah'){
+        var crypto_amount = Number(e.target.value) / ega_usd;
+        setCryptoAmount(crypto_amount);
+    }
+    if(token == 'mos'){
+        var crypto_amount = Number(e.target.value) * (ega_mos/ega_btc);
+        var usd_amount = Number(e.target.value) * (ega_btc/ega_usd);
+        setCryptoAmount(crypto_amount);
+        setPriceBTC(usd_amount);
+        setBTCAmount(usd_amount);
+        if(crypto_amount < buyLimit){
+            setDisplayerr('');
+            setDisabledBTN('disabled');
+        } else {
+            setDisplayerr('none');
+            setDisabledBTN('')
+        }
     }
   }
 
@@ -195,10 +239,7 @@ const sendToken = async (tokenAmount) => {
 
 const handleSubmit =(e) =>{
     e.preventDefault();
-    if (cryptoAmount<buyLimit){
-        alert("Sorry but, you need to purchase the tokens of minimum " + buyLimit + ' ' + token.toUpperCase());
-    }
-    else handleOpen();
+    handleOpen();
 }
 
 useEffect(()=>{
@@ -211,7 +252,7 @@ useEffect(()=>{
         <SideBar />
         <div className='row' style={{minHeight:680, minWidth:'100%', paddingLeft:'17%', paddingTop:245}}>
             
-            <form style={{width:'60%', margin:'auto', marginTop:15}} onSubmit={handleSubmit}>
+            <form style={{width:'75%', margin:'auto', marginTop:15}} onSubmit={handleSubmit}>
                 <div className='card'>
                     <div className='card-header-tb'>
                         Token Buying 
@@ -220,11 +261,11 @@ useEffect(()=>{
                         <div className="row">
                             <div className='col-lg-5'>
                                 <p style={{color:'green'}}>* 1 GAH = {(ega_usd).toFixed(6)} USD </p>
-                                <p style={{color:'green'}}>* 1 ECFA = {(ega_usd/ega_mos).toFixed(6)} USD </p>
+                                <p style={{color:'green'}}>* 1 EFRANC = {(ega_usd/ega_mos).toFixed(6)} USD </p>
                             </div>
                         
                             <div className='col-lg-7'>
-                                <p style={{color:'green'}}>* E-CFA minimum : {buyLimit} ECFA</p>
+                                <p style={{color:'green'}}>* E-FRANC minimum : {buyLimit} EFRANC</p>
                                 <p style={{color:'green'}}>* USD minimum : {limitUSD} USD</p>
                             </div>
                         </div>
@@ -242,20 +283,32 @@ useEffect(()=>{
                                     <em>None</em>
                                 </MenuItem>
                                 <MenuItem value={'gah'}>GAH TOKEN</MenuItem>
-                                <MenuItem value={'mos'}>E-CFA</MenuItem>
+                                <MenuItem value={'mos'}>E-FRANC</MenuItem>
                                 </Select>
                             </FormControl>
                             <TextField id="standard-basic" type="number" variant="outlined" value={cryptoAmount} onChange={onChangeCryptoAmount} min={50}/>
-                            <p> ECFA</p>
+                            <p> EFRANC</p>
                             
                         </div>
                         <p style={{color:'#ff0000', display:displayerr}} >* Invalid amount, because it's less than minimum amounts</p>
                         <br/>
-                        <div className='textfield'>
-                            <p>Price : </p>
-                                <TextField id="filled-basic" type="number" variant="outlined" value={price} onChange={onChangeUSDAmount}/>
-                            <p> USD</p>
+                        <div className="row">
+                            <div className="col-lg-6 col-md-12">
+                                <div className='textfield'>
+                                    <p>Price : </p>
+                                        <TextField id="filled-basic" type="number" variant="outlined" value={priceUSD} onChange={onChangeUSDAmount}/>
+                                    <p> USD</p>
+                                </div>
+                            </div>
+                            <div className="col-lg-6 col-md-12">
+                                <div className='textfield'>
+                                    <p>Price : </p>
+                                        <TextField id="filled-basic" type="number" variant="outlined" value={priceBTC} onChange={onChangeBTCAmount}/>
+                                    <p> BTC</p>
+                                </div>
+                            </div>
                         </div>
+                        
                     
                         <FormControl component="fieldset">
                             <FormLabel component="legend">Select Payment!</FormLabel>
@@ -267,15 +320,7 @@ useEffect(()=>{
                         </FormControl>
                     </div>
                     <div className='card-footer'>
-                                                
-                        {/* <Button
-                            variant="contained"
-                            color="primary"
-                            className={classes.button}
-                            type='submit'
-                        >
-                            Buy Now
-                        </Button> */}
+                        
                         <button type="submit" className="btn btn-primary" disabled={disabledBTN}>Buy Now</button>
                     </div>
                 </div>
@@ -299,14 +344,14 @@ useEffect(()=>{
                         <PaypalButton 
                             sendToken={sendToken}
                             amount={cryptoAmount} 
-                            price={price}
+                            price={priceUSD}
                             sendingComplete = {sendingComplete}
                             setSendingComplete = {setSendingComplete}
                         />: 
                         <PaymentBox
                             sendToken={sendToken}
                             amount={cryptoAmount} 
-                            price={price}
+                            price={priceBTC}
                             sendingComplete = {sendingComplete}
                             setSendingComplete = {setSendingComplete}
                         /> 

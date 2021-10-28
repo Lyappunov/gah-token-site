@@ -64,7 +64,7 @@ class PaypalButton extends React.Component {
           description: "EGA token ("+ this.props.amount + "EGA)",
           amount: {
             currency_code: "USD",
-            value: Number(this.props.price)
+            value: (Number(this.props.price)).toFixed(2)
           }
         }
       ]
@@ -98,8 +98,8 @@ class PaypalButton extends React.Component {
                 {showButtons && (
                 <div>
                     <div>
-                    <h2>EGA token amounts : {this.props.amount} EGA</h2>
-                    <h2>Price :  {this.props.price} USD</h2>
+                    <h2>E-FRANC token amounts : {this.props.amount} EFRANC</h2>
+                    <h2>Price :  {(Number(this.props.price)).toFixed(2)} USD</h2>
                     </div>
 
                     <PayPalButton

@@ -44,15 +44,15 @@ class SideBar extends Component {
                         &nbsp;
                 </li>
                 <li className="nav-item " style={{textAlign:'center'}}>
-                    <p>E-CFA Total Supply:</p>
+                    <p>E-FRANC Total Supply:</p>
                     <p style={{color:'#1eff12', fontSize:22}}>{tokenInfo?tokenInfo.data.mosTotalSupply:0}</p>
                 </li>
                 <li className="nav-item " style={{textAlign:'center'}}>
-                    <p>Distributed E-CFA :</p>
+                    <p>Distributed E-FRANC :</p>
                     <p  style={{color:'#1eff12', fontSize:22}}>{tokenInfo?tokenInfo.data.mosDistributes:0}</p>
                 </li>
                 <li className="nav-item " style={{textAlign:'center'}}>
-                    <p>E-CFA Balance:</p>
+                    <p>E-FRAC Balance:</p>
                     <p style={{color:'#1eff12', fontSize:22}}>{tokenInfo?tokenInfo.data.mosBalance:0}</p>
                 </li>
             </ul>

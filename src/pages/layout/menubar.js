@@ -51,7 +51,7 @@ class MenuBar extends Component {
                                 1 GAH = {tokenprice.data?tokenprice.data.egaPrice:0} USD
                             </li>
                             <li className="nav-item" style={{fontSize:20, color:'#1eff12', fontWeight:700}}>
-                                1 ECFA = {tokenprice.data?tokenprice.data.mosPrice:0} EUR
+                                1 EFRANC = {tokenprice.data?tokenprice.data.mosPrice:0} EUR
                             </li>
                         </ul>                        
                         <ul className="navbar-nav ms-auto navbar-list mb-2 mb-lg-0 align-items-center">

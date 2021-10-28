@@ -214,13 +214,13 @@ useEffect(()=>{
                     <div className='card-body'>
                         <div className="row">
                             <div className='col-lg-5'>
-                                <p style={{color:'green'}}>* 1 GAH = {(ega_mos).toFixed(6)} ECFA </p>
-                                <p style={{color:'green'}}>* 1 ECFA = {(1/(ega_mos)).toFixed(6)} GAH </p>
+                                <p style={{color:'green'}}>* 1 GAH = {(ega_mos).toFixed(6)} EFRANC </p>
+                                <p style={{color:'green'}}>* 1 FRANC = {(1/(ega_mos)).toFixed(6)} GAH </p>
                             </div>
                         
                             <div className='col-lg-7'>
                                 <p style={{color:'green'}}>* GAH balance : {gahBalance} GAH</p>
-                                <p style={{color:'green'}}>* E-CFA balance : {mosBalance} ECFA</p>
+                                <p style={{color:'green'}}>* E-FRANC balance : {mosBalance} EFRANC</p>
                             </div>
                         </div>
                         <div className='textfield'>

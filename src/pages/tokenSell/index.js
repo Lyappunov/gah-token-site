@@ -71,16 +71,6 @@ class TokenSell extends Component {
     var currentDateTime = thisMonthToday + 'T' + time + 'Z';
     return currentDateTime ;
   }
-
-  amountVerify = () => {
-    if(this.state.mosAmount > this.state.mosBalance) {
-      this.setState({disbaledBTN:'disabled', displayerr1:'', displayerr2:'none'});
-      if(this.state.mosAmount > Number(this.state.limitega))
-        this.setState({disbaledBTN:'disabled', displayerr1:'', displayerr2:''});
-    } else {
-      this.setState({disbaledBTN:'', displayerr1:'none', displayerr2:'none'})
-    }
-  }
   
   onChangeMOS = e => {
     this.setState({ mosAmount: e.target.value });
@@ -189,7 +179,7 @@ class TokenSell extends Component {
     e.preventDefault();
    
     if(Number(this.state.mosAmount) > Number(this.state.limitega)){
-      alert(`You can sell the your token for maximum ${this.state.salelimit} USD (${this.state.limitega} E-CFA)`)
+      alert(`You can sell the your token for maximum ${this.state.salelimit} USD (${this.state.limitega} E-FRANC)`)
     }
     else
     this.handleOpen();
@@ -230,7 +220,7 @@ class TokenSell extends Component {
         subscriber:subscriber.name,
         walletAddress: 'gah-'+subscriber.id,
         subscribeDate:datetime,
-        tokenName:'e-cfa',
+        tokenName:'e-franc',
         amount : this.state.mosAmount,
         paymentKind:this.state.radioValue,
         usdPrice:this.state.usdAmount,
@@ -316,12 +306,12 @@ class TokenSell extends Component {
                             </div>
                             <div className='row' style={{paddingLeft:25, paddingTop:25}}>
                               <div className='col-lg-5'>
-                                  <p style={{color:'green'}}>* 1 E-CFA = {(this.state.mos_usd).toFixed(6)} USD </p>
-                                  <p style={{color:'green'}}>* 1 E-CFA = {(this.state.mos_eur)} EURO </p>
+                                  <p style={{color:'green'}}>* 1 E-FRANC = {(this.state.mos_usd).toFixed(6)} USD </p>
+                                  <p style={{color:'green'}}>* 1 E-FRANC = {(this.state.mos_eur)} EURO </p>
                               </div>
                               <div className='col-lg-7'>
-                                  <p style={{color:'green'}}>E-CFA balance : {this.state.mosBalance} ECFA</p>
-                                  <p style={{color:'green'}}>1 E-CFA : {this.state.ega_btc} BTC</p>
+                                  <p style={{color:'green'}}>E-FRANC balance : {this.state.mosBalance} EFRANC</p>
+                                  <p style={{color:'green'}}>1 EFRANC : {this.state.ega_btc} BTC</p>
                               </div>
                             </div>
                             
@@ -334,7 +324,7 @@ class TokenSell extends Component {
                                       
                                           <div className="form-floating mb-4">
                                               <input type="number" className="form-control" id="mosAmount" placeholder="0" onChange={this.onChangeMOS} value={this.state.mosAmount}/>
-                                              <label>E-CFA</label>
+                                              <label>E-FRANC</label>
                                           </div>
                                           <div>
                                             <p style={{color:'#ff0000', display:this.state.displayerr1}} >* Invalid amount because it's more than the balance in your wallet. </p>
@@ -355,8 +345,8 @@ class TokenSell extends Component {
                                               <input type="number" className="form-control" id="eurAmount" placeholder="0" onChange={this.onChangeEUR} value={this.state.eurAmount}/>
                                               <label>EURO</label>
                                           </div>
-                                          <p style={{color:'grey'}}>* You can sell the your token for maximum {this.state.salelimit} USD ({this.state.limitega} ECFA)</p>
-                                          <p style={{color:'grey'}}>* If you would like to sell E-CFA token in BTC, You should the token for minimum {this.state.mins} ECFA</p>
+                                          <p style={{color:'grey'}}>* You can sell the your token for maximum {this.state.salelimit} USD ({this.state.limitega} EFRANC)</p>
+                                          <p style={{color:'grey'}}>* If you would like to sell EFRANC token in BTC, You should the token for minimum {this.state.mins} EFRANC</p>
                                       </div>
                                       <div className="modal-footer">
                                           {/* <button type="button" className="btn btn-secondary" onClick={this.editClose}>Close</button> */}
@@ -388,9 +378,9 @@ class TokenSell extends Component {
                     <form style={{width:'100%', margin:'auto'}} onSubmit={this.handleModalSubmit}>
                         <div className='modal-content' style={{width:'100%', textAlign:'center', margin:'auto', padding:40, minHeight:450, borderRadius:5, maxHeight:600, overflowY:'scroll'}}>
                             <div>
-                              <h2><span>E-CFA : </span><span style={{color:'#1eff12'}}>{this.state.mosAmount}</span> <span>ECFA</span></h2>
+                              <h2><span>E-FRANC : </span><span style={{color:'#1eff12'}}>{this.state.mosAmount}</span> <span>EFRANC</span></h2>
                               <h2><span>Price : </span><span style={{color:'#1eff12'}}>{this.state.eurAmount}</span> <span>EURO</span></h2>
-                              <h2><span>E-CFA : </span><span style={{color:'#1eff12'}}>{this.state.usdAmount}</span> <span>USD</span></h2>
+                              <h2><span>E-FRANC : </span><span style={{color:'#1eff12'}}>{this.state.usdAmount}</span> <span>USD</span></h2>
                             </div>
                             <div className='modal-body'>
                              

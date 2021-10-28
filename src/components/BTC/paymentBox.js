@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-// import { Input, Checkbox, Button, message } from "antd";
+import axios from 'axios';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Checkbox from '@material-ui/core/Checkbox';
 import { makeStyles } from '@material-ui/core/styles';
-import { withStyles } from '@material-ui/core/styles'
-import FormControlLabel from '@material-ui/core/FormControlLabel';
+import { withStyles } from '@material-ui/core/styles';
+
+import {BACKEND_URL, MY_WALLET_ADDRESS} from '../../global/config'
 
 const useStyles = makeStyles((theme) => ({
     modal: {
@@ -40,78 +41,61 @@ const GreenCheckbox = withStyles({
   })((props) => <Checkbox color="default" {...props} />);
 
 export default function PaymentBox(props) {
-    const [state, setState] = useState({
-        checkedA: true,
-        checkedB: true,
-        checkedF: true,
-        checkedG: true,
-        });
-    const [email, setEmail] = useState('lyappunov19@outlook.com')
-    const [confirm, setConfirm] = useState()
+    const [recipientAddress, setRecipientAddress] = useState(MY_WALLET_ADDRESS);
+    const [senderAddress, setSenderAddress] = useState('');
+    const [senderPrivateKey, setSenderPrivateKey] = useState('');
 
     const classes = useStyles();
     
-    const handleInput = (e) => {
-        
-        setEmail(e.target.value)
+    const onChangeAddress = (e) => {
+        setSenderAddress(e.target.value);
     };
 
-    const handleCheckbox = (e) => {
-        setConfirm(e.target.checked)
-    };
-
-    const handleCheckChange = (event) => {
-        setState({ ...state, [event.target.name]: event.target.checked });
+    const onChangePrivatekey = (e) => {
+        setSenderPrivateKey(e.target.value);
     };
     
-    const handleSubmit = () => {
-        // sendToken(props.amount)
-        props.sendToken(props.amount)
-    }
+    const handleSubmit =(e)=>{
+        e.preventDefault();
+       
+        let sendBTCData = {
+          recipientAddress: recipientAddress,
+          senderAddress:senderAddress,
+          senderPrivateKey: senderPrivateKey,
+          amountToSend: props.price
+          };
+        axios
+        .post(`${BACKEND_URL}/record/sendbitcoin`, sendBTCData)
+        .then ((res) => {
+          this.saveSubscribeDatabase()
+        })
+      }
     
     return (
         <div style={{width:'60%', backgroundColor:'grey', color:'white', borderRadius:5, minHeight:350}}>
             <div style={{width:'100%', textAlign:'center', margin:'auto', paddingTop:40, minHeight:350, borderRadius:5, maxHeight:600, overflowY:'scroll'}}>
-                <div>
-                    <h2>EGA token amounts : {props.amount} EGA</h2>
-                    <h2>Price :  {props.price} USD</h2>
-                    <h2>Price :  {props.currentAccount} USD</h2>
+                <div style={{paddinBottom:25}}>
+                    <h2>E-FRANC token amounts : {props.amount} EFRANC</h2>
+                    <h2>Price :  {props.price} BTC</h2>
                 </div>
-                {/* <form
-                    method="POST"
-                    action="https://btcpayjungle.com/apps/2PT5KLwGodnxDEYgUuZNgpwf6QU9/pos"
-                    target="blank"
-                > */}
-                <form >
+                
+                <form onSubmit={this.handleSubmit} style={{width:'100%'}}>
                     <div style={{padding:20, display:'inline'}}>
-                        <span style={{color:'white', fontSize:'18px', fontWeight:700, justifyContent:'center'}}>Email : </span>
+                        <span style={{color:'white', fontSize:'18px', fontWeight:700, justifyContent:'center'}}>Wallet Address : </span>
                         <TextField
-                            placeholder="Please input your email"
+                            placeholder="Please input your BTC wallet address"
                             variant="outlined"
-                            onChange={handleInput}
-                            
+                            onChange={onChangeAddress}    
                         />
                     </div>
-                    <div style={{padding:20}}>
-                        <FormControlLabel
-                            control={
-                                <Checkbox
-                                    checked={state.checkedB}
-                                    onChange={handleCheckChange}
-                                    name="checkedB"
-                                    color="primary"
-                                />
-                            }
-                            label="I Accept the Terms and Conditions"
+                    <div style={{padding:20, display:'inline'}}>
+                        <span style={{color:'white', fontSize:'18px', fontWeight:700, justifyContent:'center'}}>Private Key : </span>
+                        <TextField
+                            placeholder="Please input the private key."
+                            variant="outlined"
+                            onChange={onChangePrivatekey}    
                         />
                     </div>
-                    <input type="hidden" name="email" value={email} />
-                    <input type="hidden" name="orderId" value="CustomSockShopId" />
-                    <input
-                        type="hidden"
-                        name="redirectUrl"
-                        value="https://ega-coin2.vercel.app/"
-                    />
                     <div>
                         <Button
                             variant="contained"
@@ -121,7 +105,7 @@ export default function PaymentBox(props) {
                             onClick={handleSubmit}
                             
                         >
-                            {`To Payment ($${props.price})`}
+                            {`PAY (${props.price} BTC)`}
                         </Button>
                     </div>
                 </form>
