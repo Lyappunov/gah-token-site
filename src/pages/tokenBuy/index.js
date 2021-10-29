@@ -85,7 +85,7 @@ export default function TokenBuy() {
   const getCurrentDate = () => {
     var today = new Date();
     var thisyear = today.getFullYear();
-    var thisMonth = today.getMonth()<10?'0'+(today.getMonth() + 1):(today.getMonth() + 1);
+    var thisMonth = today.getMonth()<9?'0'+(today.getMonth() + 1):(today.getMonth() + 1);
     var thisDay = today.getDate()<10?'0'+(today.getDate()):today.getDate();
     var thisMonthToday = thisyear+'-'+thisMonth+'-'+thisDay;
     var Hours = today.getHours()<10?'0'+today.getHours():today.getHours();

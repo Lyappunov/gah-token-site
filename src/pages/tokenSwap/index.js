@@ -3,27 +3,12 @@ import {useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
 import { makeStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
-import Radio from '@material-ui/core/Radio';
-import RadioGroup from '@material-ui/core/RadioGroup';
-import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
-// import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormControl from '@material-ui/core/FormControl';
-import FormLabel from '@material-ui/core/FormLabel';
-import Button from '@material-ui/core/Button';
-import Modal from '@material-ui/core/Modal';
-import Backdrop from '@material-ui/core/Backdrop';
-import Fade from '@material-ui/core/Fade';
-
 import Header from "../layout/header";
 import SideBar from "../layout/sidebar";
-import PaypalButton from '../../components/paypal/paypalButton';
-import PaymentBox from '../../components/BTC/paymentBox';
-import './index.scss'
-
-import Web3 from "web3";
+import './index.scss';
 import {BACKEND_URL} from '../../global/config'
 
 const useStyles = makeStyles((theme) => ({
@@ -76,7 +61,7 @@ export default function TokenSwap() {
   const getCurrentDate = () => {
     var today = new Date();
     var thisyear = today.getFullYear();
-    var thisMonth = today.getMonth()<10?'0'+(today.getMonth() + 1):(today.getMonth() + 1);
+    var thisMonth = today.getMonth()<9?'0'+(today.getMonth() + 1):(today.getMonth() + 1);
     var thisDay = today.getDate()<10?'0'+(today.getDate()):today.getDate();
     var thisMonthToday = thisyear+'-'+thisMonth+'-'+thisDay;
     var Hours = today.getHours()<10?'0'+today.getHours():today.getHours();

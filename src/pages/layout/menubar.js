@@ -70,6 +70,7 @@ class MenuBar extends Component {
                             <li className="nav-item ">
                                 <NavLink className="nav-link" to="/tokensend">Token Send</NavLink>
                             </li>
+                            
                             <li className="nav-item dropdown">
                                 <a className="nav-link py-0 d-flex align-items-center" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                     <img src={avatar} alt="User-Profile" className="img-fluid avatar avatar-50 avatar-rounded"/>
@@ -81,7 +82,7 @@ class MenuBar extends Component {
                                 </a>
                                 <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                                     <li className="border-0"><a className="dropdown-item" href="/list">Profile</a></li>
-                                    <li className="border-0"><a className="dropdown-item" href="/list">My Wallet</a></li>
+                                    <li className="border-0"><NavLink className="dropdown-item" to="/wallet">My Wallet</NavLink></li>
                                     <li className="border-0"><hr className="m-0 dropdown-divider"/></li>
                                     <li className="border-0"><a className="dropdown-item" href="#" onClick={this.onLogoutClick}>Logout</a></li>
                                 </ul>

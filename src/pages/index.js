@@ -18,6 +18,7 @@ import TokenBuy from "../pages/tokenBuy";
 import TokenSell from "../pages/tokenSell";
 import TokenSwap from "../pages/tokenSwap";
 import TokenSend from "../pages/tokenSend";
+import Wallet from "../pages/wallet";
 import setAuthToken from "../utils/setAuthToken";
 
 import Home from "../pages/home";
@@ -74,6 +75,9 @@ function Pages  ()  {
                 </PrivateRoute>
                 <PrivateRoute exact path="/tokensend">
                   <TokenSend />
+                </PrivateRoute>
+                <PrivateRoute exact path="/wallet">
+                  <Wallet />
                 </PrivateRoute>
             </Switch>
             
