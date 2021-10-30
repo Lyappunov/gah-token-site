@@ -18,7 +18,6 @@ class SideBar extends Component {
 
   render() {
      let  tokenInfo  = this.props.token.token;
-     console.log(tokenInfo)
   return (
     <div className="row">
         <div className="col-md-3 col-lg-3 col-sm-12 col-xs-12" >

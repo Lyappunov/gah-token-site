@@ -9,7 +9,7 @@ import './index.scss'
 import { logoutUser } from "../../actions/authActions";
 import { getTotalInfo } from "../../actions/tokenActions";
 import { getCurrentPrice } from "../../actions/tokenPriceActions";
-import avatar from "../../assets/images/06.png"
+import {BACKEND_URL} from '../../global/config'
 
 
  
@@ -26,6 +26,7 @@ class MenuBar extends Component {
   render() {
     const { user } = this.props.auth;
     const { tokenprice } = this.props.tokenprice;
+    
   return (
     <div>
         <div className="position-relative">
@@ -55,25 +56,25 @@ class MenuBar extends Component {
                             </li>
                         </ul>                        
                         <ul className="navbar-nav ms-auto navbar-list mb-2 mb-lg-0 align-items-center">
-                            <li className="nav-item ">
-                                <NavLink className="nav-link" to="/home">Home</NavLink>
+                            <li className="nav-item " style={{padding:0}}>
+                                <NavLink className="dropdown-item" to="/home">Home</NavLink>
                             </li>
-                            <li className="nav-item ">
-                                <NavLink className="nav-link" to="/tokenbuy">Token Buying</NavLink>
+                            <li className="nav-item " style={{padding:0}}>
+                                <NavLink className="dropdown-item" to="/tokenbuy">Token Buying</NavLink>
                             </li>
-                            <li className="nav-item ">
-                                <NavLink className="nav-link" to="/tokensell">Token Sale</NavLink>
+                            <li className="nav-item " style={{padding:0}}>
+                                <NavLink className="dropdown-item" to="/tokensell">Token Sale</NavLink>
                             </li>
-                            <li className="nav-item ">
-                                <NavLink className="nav-link" to="/tokenswap">Token Swap</NavLink>
+                            <li className="nav-item " style={{padding:0}}>
+                                <NavLink className="dropdown-item" to="/tokenswap">Token Swap</NavLink>
                             </li>
-                            <li className="nav-item ">
-                                <NavLink className="nav-link" to="/tokensend">Token Send</NavLink>
+                            <li className="nav-item " style={{padding:0}}>
+                                <NavLink className="dropdown-item" to="/tokensend">Token Send</NavLink>
                             </li>
                             
                             <li className="nav-item dropdown">
                                 <a className="nav-link py-0 d-flex align-items-center" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <img src={avatar} alt="User-Profile" className="img-fluid avatar avatar-50 avatar-rounded"/>
+                                    <img src={`${BACKEND_URL}/${user.avatar}`} alt="User-Profile" className="img-fluid avatar avatar-50 avatar-rounded"/>
                                     <div className="caption ms-3 ">
                                         <h6 className="mb-0 caption-title">{user.name}</h6>
                                         {/* <p className="mb-0 caption-sub-title">Super Admin</p> */}
@@ -81,7 +82,7 @@ class MenuBar extends Component {
                                     </div>
                                 </a>
                                 <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                                    <li className="border-0"><a className="dropdown-item" href="/list">Profile</a></li>
+                                    <li className="border-0"><NavLink className="dropdown-item" to="/profile">My Profile</NavLink></li>
                                     <li className="border-0"><NavLink className="dropdown-item" to="/wallet">My Wallet</NavLink></li>
                                     <li className="border-0"><hr className="m-0 dropdown-divider"/></li>
                                     <li className="border-0"><a className="dropdown-item" href="#" onClick={this.onLogoutClick}>Logout</a></li>

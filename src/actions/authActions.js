@@ -26,7 +26,6 @@ export const loginUser = userData => dispatch => {
         .post(`${SERVER_MAIN_URL}/record/login`, userData)
         .then(res => {
             console.log('response.data is ', res.data)
-            debugger;
             const { token } = res.data;
             localStorage.setItem("jwtToken", token);
             const decoded = jwt_decode(token);

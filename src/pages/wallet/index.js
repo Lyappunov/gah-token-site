@@ -49,10 +49,10 @@ export default function Wallet() {
             if(responseData[1].length != 0){
                 responseData[1].forEach(swap => {
                     let fromToken = ''
-                        if(swap.fromToken == 'mos') fromToken = 'E-FRANC token';
+                        if(swap.fromToken == 'efranc') fromToken = 'E-FRANC token';
                         if(swap.fromToken == 'gah') fromToken = 'GAH token';
                     let toToken = ''
-                        if(swap.toToken == 'mos') toToken = 'E-FRANC token';
+                        if(swap.toToken == 'efranc') toToken = 'E-FRANC token';
                         if(swap.toToken == 'gah') toToken = 'GAH token';
                     let tranDate = (swap.swapDate).replace('T', ' ');
                     tranDate = tranDate.replace('Z', '');
